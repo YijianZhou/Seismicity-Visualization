@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import config
 from reader import read_ctlg
 
-cfg = config.Config()
 # catalog info
+cfg = config.Config_Loc()
 ctlg_path = cfg.ctlg_path
 lon_rng = cfg.lon_rng
 lat_rng = cfg.lat_rng
@@ -18,7 +18,7 @@ fig_title = cfg.fig_title
 fig_fname = cfg.fig_fname
 fsize_label = cfg.fsize_label
 fsize_title = cfg.fsize_title
-point_size = cfg.point_size
+mark_size = cfg.mark_size
 fig_xsize = cfg.fig_xsize
 fig_ysize = fig_xsize * (lat_rng[1]-lat_rng[0]) / (lon_rng[1]-lon_rng[0])
 alpha = cfg.alpha
@@ -35,7 +35,7 @@ events = events[lat_cond * lon_cond * dep_cond]
 lat = list(events['lat'])
 lon = list(events['lon'])
 dep = list(events['dep'])
-mag = list(events['mag'] * point_size)
+mag = list(events['mag'] * mark_size)
 
 # 1. plot dep hist
 plt.figure()
