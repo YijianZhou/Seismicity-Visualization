@@ -12,6 +12,8 @@ class Config_Loc(object):
     self.lon_rng = [102.5, 103.9] #[102.25, 103.8]
     self.lat_rng = [24.3, 26.5] #[25.9, 27.5]
     self.dep_rng = [0, 30.]
+    self.prof_pnt = np.array([[103,25],[103.5,26]]) # ref points for profile
+    self.prof_wd = 10. # width of profile km
     # plot params
     self.fig_title = 'PAD HypoInverse: ZSY Network'
     self.fig_fname = 'zsy_pad_hyp.pdf'
@@ -39,4 +41,5 @@ class Config_Mag(object):
     self.fsize_title = 16
     self.mark_size = 10.
     self.alpha = 0.6
+
 
