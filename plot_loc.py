@@ -70,6 +70,8 @@ plt.figure()
 ax = plt.gca()
 ax.invert_yaxis()
 plt.scatter(prof_dist, prof_dep, prof_mag, alpha=alpha)
+plt.annotate('A', (0, 0))
+plt.annotate('B', (abs_ab*111, 0))
 plt.xlabel('Along-Profile Distance (km)', fontsize=fsize_label)
 plt.ylabel('Depth (km)', fontsize=fsize_label)
 plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
@@ -82,10 +84,10 @@ fig = plt.figure(figsize=(fig_xsize, fig_ysize))
 ax = plt.gca()
 color = [cmap(1-di/dep_rng[1]) for di in dep]
 # events & reference  profile points
-plt.plot(prof_pnt[:,0], prof_pnt[:,1], 'w--', alpha=alpha)
-plt.scatter(lon, lat, mag, alpha=alpha, color=color)
+plt.plot(prof_pnt[:,0], prof_pnt[:,1], 'w--')
 plt.annotate('A', (prof_pnt[0,0], prof_pnt[0,1]))
 plt.annotate('B', (prof_pnt[1,0], prof_pnt[1,1]))
+plt.scatter(lon, lat, mag, alpha=alpha, color=color)
 # fill up edge
 edgex = [lon_rng[0], lon_rng[0], lon_rng[1], lon_rng[1]]
 edgey = [lat_rng[0], lat_rng[1], lat_rng[0], lat_rng[1]]
