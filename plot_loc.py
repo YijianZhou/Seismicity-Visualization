@@ -26,6 +26,7 @@ alpha = cfg.alpha
 cmap = plt.get_cmap(cfg.cmap)
 cbar_pos = cfg.cbar_pos
 cbar_ticks = cfg.cbar_ticks
+plot_prof = cfg.plot_prof
 
 # read & filter
 events = read_ctlg(ctlg_path)
@@ -84,9 +85,10 @@ fig = plt.figure(figsize=(fig_xsize, fig_ysize))
 ax = plt.gca()
 color = [cmap(1-di/dep_rng[1]) for di in dep]
 # events & reference  profile points
-plt.plot(prof_pnt[:,0], prof_pnt[:,1], 'w--')
-plt.annotate('A', (prof_pnt[0,0], prof_pnt[0,1]))
-plt.annotate('B', (prof_pnt[1,0], prof_pnt[1,1]))
+if plot_prof:
+    plt.plot(prof_pnt[:,0], prof_pnt[:,1], 'w--')
+    plt.annotate('A', (prof_pnt[0,0], prof_pnt[0,1]))
+    plt.annotate('B', (prof_pnt[1,0], prof_pnt[1,1]))
 plt.scatter(lon, lat, mag, alpha=alpha, color=color)
 # fill up edge
 edgex = [lon_rng[0], lon_rng[0], lon_rng[1], lon_rng[1]]
