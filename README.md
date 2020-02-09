@@ -1,5 +1,5 @@
 # Seismicity-Visualization
-Scripts for plotting seismicity
+Scripts for seismicity statistics and visualization
 
 1. Location <br>
   depth distribution <br>
