@@ -35,9 +35,9 @@ mag_bin, num, cum_num = calc_fmd(mag)
 mc, [b_val, b_dev] = calc_mc_b(mag)
 a_val = np.log10(sum(mag>mc))
 gr_fit = 10**(a_val - b_val * (mag_bin - mc))
-mag_bin_comp = mag_bin[mag_bin>=mc]
-num_comp = num[mag_bin>=mc]
-cum_num_comp = cum_num[mag_bin>=mc]
+mag_bin_comp = mag_bin[mag_bin>mc]
+num_comp = num[mag_bin>mc]
+cum_num_comp = cum_num[mag_bin>mc]
 text_xy = (np.median(mag_bin), np.amax(cum_num_comp))
 
 # 1. plot FMD 
