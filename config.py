@@ -36,7 +36,7 @@ class Config_Mag(object):
   def __init__(self):
 
     # catalog info
-    self.ctlg_path = 'test/scsn.csv'
+    self.ctlg_path = 'test/zsy.csv'
     self.mag_rng = [-1, 8.]
     # plot params
     self.fig_title_fmd = 'FMD: ZSY Network'

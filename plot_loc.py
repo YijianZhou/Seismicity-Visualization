@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import config
-from reader import read_ctlg
+from reader import read_ctlg, slice_ctlg
 
 # catalog info
 cfg = config.Config_Loc()
@@ -30,10 +30,7 @@ plot_prof = cfg.plot_prof
 
 # read & filter
 events = read_ctlg(ctlg_path)
-lat_cond = (events['lat']>lat_rng[0])*(events['lat']<lat_rng[1])
-lon_cond = (events['lon']>lon_rng[0])*(events['lon']<lon_rng[1])
-dep_cond = (events['dep']>dep_rng[0])*(events['dep']<dep_rng[1])
-events = events[lat_cond * lon_cond * dep_cond]
+events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
 num_events = len(events)
 lat = list(events['lat'])
 lon = list(events['lon'])

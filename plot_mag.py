@@ -3,8 +3,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from obspy import UTCDateTime
-from reader import read_ctlg
-from statis_lib import *
+from reader import read_ctlg, slice_ctlg
+from statis_lib import calc_mc_b, calc_fmd
 import config
 
 # catalog info
@@ -26,14 +26,13 @@ color_cum = cfg.color_cum
 
 # read & filter catalog
 events = read_ctlg(ctlg_path)
-mag_cond = (events['mag']>mag_rng[0])*(events['mag']<mag_rng[1])
-events = events[mag_cond]
+events = slice_ctlg(events, mag_rng=mag_rng)
 mag = np.array(list(events['mag']))
 ot = [oti.datetime for oti in events['ot']]
 # calc fmd
 mag_bin, num, cum_num = calc_fmd(mag)
 mc, [b_val, b_dev] = calc_mc_b(mag)
-a_val = np.log10(sum(mag>mc))
+a_val = np.log10(sum(mag>=mc))
 gr_fit = 10**(a_val - b_val * (mag_bin - mc))
 mag_bin_comp = mag_bin[mag_bin>mc]
 num_comp = num[mag_bin>mc]
