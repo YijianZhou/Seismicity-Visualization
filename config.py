@@ -3,7 +3,7 @@
 import os
 import numpy as np
 
-# 1. plot event location
+# 1. plot loc: loc map, profile & hist
 class Config_Loc(object):
   def __init__(self):
 
@@ -31,7 +31,7 @@ class Config_Loc(object):
     self.cbar_ticks = np.arange(0,1.1,0.25)
 
 
-# 2. plot FMD & M-t
+# 2. plot mag: FMD & M-t
 class Config_Mag(object):
   def __init__(self):
 
@@ -50,4 +50,26 @@ class Config_Mag(object):
     self.mark_cum = '.'
     self.color_num = 'tab:blue'
     self.color_cum = 'tab:orange'
+
+
+# 3. plot cmp: FMD
+class Config_Cmp(object):
+  def __init__(self):
+
+    # catalog info
+    self.ctlg_list = ['test/scsn.csv', 'test/shelly.csv']
+    self.name_list = ['SCSN', 'Shelly']
+    self.color_list = ['tab:blue', 'tab:orange']
+    self.mag_rng = [-1, 8.]
+    # plot params
+    self.fig_title_fmd = 'Compare FMD: SCSN & Shelly'
+    self.fig_title_mt = 'Compare M-t: SCSN & Shelly'
+    self.fsize_label = 14
+    self.fsize_title = 16
+    self.mark_size = 10.
+    self.alpha_fmd = 0.6
+    self.alpha_mt = 0.4
+    self.mark_num = '^'
+    self.mark_cum = '.'
+
 
