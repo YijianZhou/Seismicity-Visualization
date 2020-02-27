@@ -12,11 +12,13 @@ ctlg_path = cfg.ctlg_path
 lon_rng = cfg.lon_rng
 lat_rng = cfg.lat_rng
 dep_rng = cfg.dep_rng
+x_ratio = np.cos(lat_rng[0] * np.pi / 180)
 prof_pnt = cfg.prof_pnt
 prof_wd = cfg.prof_wd / 111 # km to deg
 # plot config
 fig_title = cfg.fig_title
 fig_fname = cfg.fig_fname
+prof_name = cfg.prof_name
 fsize_label = cfg.fsize_label
 fsize_title = cfg.fsize_title
 mark_size = cfg.mark_size
@@ -32,18 +34,20 @@ plot_prof = cfg.plot_prof
 events = read_ctlg(ctlg_path)
 events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
 num_events = len(events)
-lat = list(events['lat'])
-lon = list(events['lon'])
-dep = list(events['dep'])
-mag = list(events['mag'] * mark_size)
+lat = np.array(list(events['lat']))
+lon = np.array(list(events['lon']))
+dep = np.array(list(events['dep']))
+mag = np.array(list(events['mag'] * mark_size))
 
 # calc along profile dist
 prof_dist, prof_dep, prof_mag = [], [], []
-vec_ab = prof_pnt[1]-prof_pnt[0]
+vec_ab = prof_pnt[1] - prof_pnt[0]
+vec_ab[0] *= x_ratio
 abs_ab = np.linalg.norm(vec_ab)
 for i in range(num_events):
     loc_c = np.array([lon[i], lat[i]])
     vec_ac = loc_c - prof_pnt[0]
+    vec_ac[0] *= x_ratio
     abs_ac = np.linalg.norm(vec_ac)
     cos = vec_ac.dot(vec_ab) / abs_ab / abs_ac
     if abs_ac * (1-cos**2)**0.5 > prof_wd: continue
@@ -56,18 +60,22 @@ for i in range(num_events):
 # 1. plot dep hist
 plt.figure()
 ax = plt.gca()
-plt.hist(dep)
+plt.hist(dep, alpha=alpha)
 plt.xlabel('Depth (km)', fontsize=fsize_label)
 plt.ylabel('Number', fontsize=fsize_label)
 plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
 plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
 plt.title(fig_title, fontsize=fsize_title)
+plt.tight_layout()
 
 # 2. plot profile
-plt.figure()
+plt.figure(figsize=(abs_ab*30,6))
 ax = plt.gca()
 ax.invert_yaxis()
+edgex = [0,0,abs_ab*111,abs_ab*111]
+edgey = [dep_rng[0],dep_rng[1],dep_rng[0],dep_rng[1]]
 plt.scatter(prof_dist, prof_dep, prof_mag, alpha=alpha)
+plt.scatter(edgex, edgey, alpha=0)
 plt.annotate('A', (0, 0))
 plt.annotate('B', (abs_ab*111, 0))
 plt.xlabel('Along-Profile Distance (km)', fontsize=fsize_label)
@@ -75,6 +83,7 @@ plt.ylabel('Depth (km)', fontsize=fsize_label)
 plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
 plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
 plt.title(fig_title, fontsize=fsize_title)
+plt.savefig(prof_name)
 
 # 3. plot map view
 plt.style.use('ggplot')
@@ -103,5 +112,6 @@ cbar.set_label('Depth (km)')
 cbar_tlabels = [str((1-tick)*dep_rng[1]) for tick in cbar_ticks]
 cbar.set_ticks(cbar_ticks)
 cbar.set_ticklabels(cbar_tlabels)
+plt.tight_layout()
 plt.savefig(fig_fname)
 plt.show()
