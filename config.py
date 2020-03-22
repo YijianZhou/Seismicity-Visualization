@@ -70,3 +70,27 @@ class Config_Cmp(object):
     self.mark_num = '^'
     self.mark_cum = '.'
 
+# 4. plot b-map
+class Config_b_Map(object):
+  def __init__(self):
+
+    # catalog info
+    self.ctlg_path = 'test/zsy_pad_reloc.csv'
+    self.fault_path = 'test/CN-faults.dat'
+    self.lon_rng = [102.5, 103.91]
+    self.lat_rng = [24.3, 26.51]
+    # calc params
+    self.xy_grid = 0.1
+    self.slice_radius = .2
+    self.min_num = 170
+    self.num_proc = 1
+    # plot params
+    self.fig_fname = 'output/b_zsy.pdf'
+    self.fig_title = 'b-Value Mapping: XJF-ZSY'
+    self.fig_size = (6.5, 8.)
+    self.fsize_label = 13
+    self.fsize_title = 16
+    self.mag_corr = .5
+    self.mark_size = 4.
+    self.alpha = 0.4
+    self.cmap = 'viridis'
