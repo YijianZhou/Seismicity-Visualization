@@ -2,19 +2,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # 1. calc Mc & b-value
-def calc_mc_b(mag, method='MAXC'):
+def calc_mc_b(mag, min_num=100, method='MAXC'):
+    if len(mag) < min_num: return np.nan, [np.nan, np.nan]
     mag = np.array(mag)
     if method=='MAXC': mc = calc_mc_maxc(mag)
-    mag = mag[mag>mc]
+    mag = mag[mag>=mc]
     b_val, b_dev = calc_b(mag)
     return mc, [b_val, b_dev]
 
 
 # calc b value
-def calc_b(mag, min_num=200):
+def calc_b(mag, min_num=None):
     num_events = len(mag)
-    b_val = 0 if num_events < min_num \
-        else np.log10(np.exp(1)) / (np.mean(mag) - np.min(mag) + 0.05)
+    if min_num: 
+        if num_events < min_num: return -1, -1
+    b_val = np.log10(np.exp(1)) / (np.mean(mag) - np.min(mag) + 0.05)
     b_dev = 2.3 * b_val**2 * (np.var(mag) / num_events)**0.5
     return round(b_val,2), round(b_dev,2)
 
@@ -23,7 +25,7 @@ def calc_b(mag, min_num=200):
 def calc_fmd(mag):
     mag_max = np.ceil(10 * max(mag)) / 10
     mag_min = np.floor(10 * min(mag)) / 10
-    mag_bin = np.around(np.arange(mag_min-0.1, mag_max+0.2, 0.1), 1)
+    mag_bin = np.around(np.arange(mag_min-0.1, mag_max+0.2, 0.1),1)
     num = np.histogram(mag, mag_bin)[0]
     cum_num = np.cumsum(num[::-1])[::-1]
     return mag_bin[1:], num, cum_num
