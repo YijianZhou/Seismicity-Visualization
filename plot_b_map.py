@@ -41,6 +41,8 @@ alpha = cfg.alpha
 cbar_frac = cfg.cbar_frac
 cbar_asp = cfg.cbar_asp
 line_wid = cfg.line_wid
+b_rng = cfg.b_rng
+mc_rng = cfg.mc_rng
 # read & filter catalog
 events = read_ctlg(ctlg_path)
 events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng)
@@ -77,7 +79,7 @@ mc_mat[cond_b+cond_mc] = np.nan
 # plot b mapping
 fig = plt.figure(figsize=fig_size)
 ax = plt.gca()
-im = plt.imshow(b_mat, cmap=cmap, origin='lower', 
+im = plt.imshow(b_mat, cmap=cmap, origin='lower', vmin=b_rng[0], vmax=b_rng[1],
                 extent=[lon[0]-xy_grid/2, lon[-1]+xy_grid/2,
                         lat[0]-xy_grid/2, lat[-1]+xy_grid/2])
 cbar = plt.colorbar(im, ax=ax, fraction=cbar_frac, aspect=cbar_asp)
@@ -92,10 +94,10 @@ plt.title('b-Value Map: %s'%fig_title, fontsize=fsize_title)
 plt.tight_layout()
 plt.savefig('%s/b_%s'%(fig_root, fig_fname))
 
-# plot b mapping
+# plot mc mapping
 fig = plt.figure(figsize=fig_size)
 ax = plt.gca()
-im = plt.imshow(mc_mat, cmap=cmap, origin='lower',
+im = plt.imshow(mc_mat, cmap=cmap, origin='lower', vmin=mc_rng[0], vmax=mc_rng[1],
                 extent=[lon[0]-xy_grid/2, lon[-1]+xy_grid/2,
                         lat[0]-xy_grid/2, lat[-1]+xy_grid/2])
 cbar = plt.colorbar(im, ax=ax, fraction=cbar_frac, aspect=cbar_asp)
