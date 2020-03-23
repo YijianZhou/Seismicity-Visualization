@@ -72,6 +72,7 @@ class Config_Cmp(object):
     self.mark_num = '^'
     self.mark_cum = '.'
 
+    
 # 4. plot b-map
 class Config_b_Map(object):
   def __init__(self):
