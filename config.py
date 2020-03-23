@@ -75,22 +75,27 @@ class Config_b_Map(object):
   def __init__(self):
 
     # catalog info
-    self.ctlg_path = 'test/zsy_pad_reloc.csv'
-    self.fault_path = 'test/CN-faults.dat'
-    self.lon_rng = [102.5, 103.91]
-    self.lat_rng = [24.3, 26.51]
+    self.ctlg_path = 'input/qj_pad_reloc.csv'
+    self.fault_path = '/home/public/GMT_data/CN-faults.dat'
+    self.lon_rng = [[102.5, 103.91], [102.3, 103.81]][1]
+    self.lat_rng = [[24.3, 26.51], [26, 27.51]][1]
     # calc params
     self.xy_grid = 0.1
-    self.slice_radius = .2
-    self.min_num = 170
+    self.slice_radius = [.25, 0.15][1]
+    self.min_num = 200
     self.num_proc = 1
+    self.max_b = 3.
+    self.min_mc = 0.3
     # plot params
-    self.fig_fname = 'output/b_zsy.pdf'
-    self.fig_title = 'b-Value Mapping: XJF-ZSY'
-    self.fig_size = (6.5, 8.)
+    self.fig_fname = 'output/pre-ld_pad.pdf'
+    self.fig_title = 'Pre-Ludian by PAD'
+    self.fig_size = [(6.5, 8.), (8.5,7)][1]
     self.fsize_label = 13
     self.fsize_title = 16
     self.mag_corr = .5
     self.mark_size = 4.
     self.alpha = 0.4
     self.cmap = 'viridis'
+    self.cbar_asp = 10
+    self.cbar_frac = [0.05, 0.03][1]
+    self.line_wid = 1.2
