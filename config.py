@@ -6,9 +6,10 @@ import numpy as np
 # 1. plot event location
 class Config_Loc(object):
   def __init__(self):
-
+    
     # catalog info
     self.ctlg_path = 'catalog/msms_reloc_fore.csv'
+    self.fault_path = '/home/public/GMT_data/CN-faults.dat'
     self.lon_rng = [-117.9, -117.2] 
     self.lat_rng = [35.4, 36.1] 
     self.dep_rng = [0, 20.]
@@ -27,12 +28,13 @@ class Config_Loc(object):
     self.cmap = 'hot'
     self.cbar_pos = [0.8,0.65,0.03,0.25]
     self.cbar_ticks = np.arange(0,1.1,0.25)
+    self.line_wid = 1.
 
-
+    
 # 2. plot FMD & M-t
 class Config_Mag(object):
   def __init__(self):
-
+    
     # catalog info
     self.ctlg_path = 'catalog/shelly_main.csv'
     self.mag_rng = [-1, 8.]
