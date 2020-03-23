@@ -99,3 +99,5 @@ class Config_b_Map(object):
     self.cbar_asp = 10
     self.cbar_frac = [0.05, 0.03][1]
     self.line_wid = 1.2
+    self.b_rng = [0.7, 2.3]
+    self.mc_rng = [0.3, 1.1]
