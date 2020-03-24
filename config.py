@@ -78,7 +78,7 @@ class Config_b_Map(object):
   def __init__(self):
 
     # catalog info
-    self.ctlg_path = 'input/qj_pad_reloc.csv'
+    self.ctlg_path = 'input/xls_pad_reloc.csv'
     self.fault_path = '/home/public/GMT_data/CN-faults.dat'
     self.lon_rng = [[102.5, 103.91], [102.3, 103.81]][1]
     self.lat_rng = [[24.3, 26.51], [26, 27.51]][1]
@@ -87,13 +87,13 @@ class Config_b_Map(object):
     self.slice_radius = [.25, 0.15][1]
     self.min_num = 200
     self.num_proc = 1
-    self.max_b = 3.
+    self.max_b = 2.5
     self.min_mc = 0.3
     # plot params
-    self.fig_fname = 'output/pre-ld_pad.pdf'
-    self.fig_title = 'Pre-Ludian by PAD'
-    self.fig_size = [(6.5, 8.), (8.5,7)][1]
-    self.fsize_label = 13
+    self.fig_fname = 'output/post-ld_pad.pdf'
+    self.fig_title = 'Post-Ludian by PAD'
+    self.fig_size = [(13, 16), (15,13)][1]
+    self.fsize_label = 14
     self.fsize_title = 16
     self.mag_corr = .5
     self.mark_size = 4.
@@ -101,6 +101,7 @@ class Config_b_Map(object):
     self.cmap = 'viridis'
     self.cbar_asp = 10
     self.cbar_frac = [0.05, 0.03][1]
-    self.line_wid = 1.2
+    self.cbar_pad = 0.02
+    self.line_wid = 1.
     self.b_rng = [0.7, 2.3]
     self.mc_rng = [0.3, 1.1]
