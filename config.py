@@ -90,7 +90,7 @@ class Config_b_Map(object):
     self.max_b = 2.5
     self.min_mc = 0.3
     # plot params
-    self.fig_fname = 'output/post-ld_pad.pdf'
+    self.fig_fname = 'output/b_post-ld_pad.pdf'
     self.fig_title = 'Post-Ludian by PAD'
     self.fig_size = [(13, 16), (15,13)][1]
     self.fsize_label = 14
