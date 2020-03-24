@@ -31,7 +31,7 @@ max_b = cfg.max_b
 min_mc = cfg.min_mc
 num_proc = cfg.num_proc
 # plot config
-fig_root, fig_fname = os.path.split(cfg.fig_fname)
+fig_fname = cfg.fig_fname
 fig_title = cfg.fig_title
 fig_size = cfg.fig_size
 fsize_label = cfg.fsize_label
@@ -113,5 +113,5 @@ plt.subplot(2,2,4)
 plot_map(a_mat, [None,None], 'a-Value')
 plt.suptitle(fig_title, fontsize=fsize_title+2)
 plt.tight_layout()
-plt.savefig('%s/b_%s'%(fig_root, fig_fname))
+plt.savefig(fig_fname)
 plt.show()
