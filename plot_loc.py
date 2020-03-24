@@ -113,7 +113,7 @@ plt.title(fig_title, fontsize=fsize_title)
 # plot colorbar
 cbar_ax = fig.add_axes(cbar_pos)
 cbar = mpl.colorbar.ColorbarBase(cbar_ax, cmap=cmap)
-cbar.set_label('Depth (km)')
+cbar.set_label('Depth (km)', rotation=-90, va="bottom")
 cbar_tlabels = [str((1-tick)*dep_rng[1]) for tick in cbar_ticks]
 cbar.set_ticks(cbar_ticks)
 cbar.set_ticklabels(cbar_tlabels)
