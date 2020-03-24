@@ -95,7 +95,7 @@ def plot_map(d_mat, d_rng, sub_name):
     plt.scatter(events['lon'], events['lat'], mag, 
                 color='gray', alpha=alpha, zorder=len(faults)+3)
     # tune fig
-    cbar.ax.set_ylabel(sub_name, fontsize=fsize_label)
+    cbar.ax.set_ylabel(sub_name, fontsize=fsize_label, rotation=-90, va="bottom")
     plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
     plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
     plt.title('%s Map'%sub_name, fontsize=fsize_title)
