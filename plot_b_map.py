@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import multiprocessing as mp
 from obspy import UTCDateTime
-from reader import read_pad_det, read_ctlg, read_fault, slice_ctlg, slice_ctlg_circle
+from reader import read_ctlg, read_fault, slice_ctlg, slice_ctlg_circle
 from statis_lib import calc_mc_b
 import config
 
