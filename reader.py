@@ -17,18 +17,6 @@ def read_ctlg(fctlg):
     return np.array(out, dtype=dtype)
 
 
-def read_pad_det(fctlg):
-    dtype = [('ot','O'),('lat','O'),('lon','O'),('mag','O')]
-    f=open(fctlg); lines=f.readlines(); f.close()
-    out = []
-    for line in lines:
-        codes = line.split(',')
-        ot = UTCDateTime(codes[0])
-        lat, lon, mag = [float(code) for code in codes[1:4]]
-        out.append((ot, lat, lon, mag))
-    return np.array(out, dtype=dtype)
-
-
 def slice_ctlg(events, ot_rng=None, lat_rng=None, lon_rng=None, dep_rng=None, mag_rng=None):
     if ot_rng: events = events[(events['ot']>ot_rng[0])*(events['ot']<ot_rng[1])]
     if lat_rng: events = events[(events['lat']>lat_rng[0])*(events['lat']<lat_rng[1])]
