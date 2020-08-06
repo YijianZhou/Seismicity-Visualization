@@ -98,7 +98,7 @@ class Config_b_Map(object):
     self.mag_corr = .5
     self.mark_size = 4.
     self.alpha = 0.4
-    self.cmap = 'viridis'
+    self.cmap = 'coolwarm'
     self.cbar_asp = 10
     self.cbar_frac = [0.05, 0.03][1]
     self.cbar_pad = 0.02
