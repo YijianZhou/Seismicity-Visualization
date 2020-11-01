@@ -14,7 +14,7 @@ Scripts for seismicity statistics and visualization. One script for one figure, 
   Scripts based on MATLAB <br>
   plot_seis3d.m: 3D seismic events distribution <br>
 
-3. GMT
+3. GMT <br>
   Immplemented with the Generic Mapping Tools (GMT) <br>
   plot_sta.sh: plot station distribution <br>
   plot_b_surf.sh: plot b-value distribution <br>
