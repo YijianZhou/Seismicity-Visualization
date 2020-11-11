@@ -1,5 +1,7 @@
 """ Plot comparison of FMD between catalogs
 """
+import sys
+sys.path.append('/home/zhouyj/software/seis_view')
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
