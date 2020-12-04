@@ -5,7 +5,7 @@ sys.path.append('/home/zhouyj/software/seis_view')
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from reader import read_ctlg, read_fault, slice_ctlg, slice_ctlg_circle
+from reader import read_ctlg, read_fault, slice_ctlg
 from statis_lib import calc_fmd
 import warnings
 warnings.filterwarnings("ignore")
