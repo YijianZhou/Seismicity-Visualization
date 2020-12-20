@@ -7,6 +7,7 @@ Scripts for seismicity statistics and visualization. One script for one figure, 
   *plot_mag_time.py*: magnitude-time sequence view <br>
   *plot_prof_multi-seg.py*: cross-section profile with multiple fault segments <br>
   *plot_prof_multi-cross-sec.py*: cross-section profile with multiple cross-sections <br>
+  *plot_loc_prof.py*: location map + cross-sections <br>
   *plot_b_map.py*: b-value distribution in map view <br>
   *plot_data_continuity.py*: plot data continuity <br>
   *plot_fmd_compare.py*: comparison of FMD <br>
