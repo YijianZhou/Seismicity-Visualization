@@ -120,10 +120,11 @@ def plot_rect(prof_pnts, prof_wid, color):
     num_profs = int(len(prof_pnts)/2)
     for j in range(num_profs):
         refs = prof_pnts[j*2:j*2+2]
-        W = prof_wid
+        theta = np.arctan((refs[1][1]-refs[0][1]) / (refs[1][0]-refs[0][0]))
+        W = prof_wid * ((cos_lat*np.sin(theta))**2 + np.cos(theta)**2)**-0.5
         L = calc_dist(refs[0], refs[1])
-        theta = np.rad2deg(np.arctan((refs[1][1]-refs[0][1]) / (refs[1][0]-refs[0][0])))
         x0, y0 = np.mean(refs[:,0]), np.mean(refs[:,1])
+        theta = np.rad2deg(theta)
         tr = mpl.transforms.Affine2D().rotate_deg_around(x0, y0, theta) + tr0
         rect = pat.Rectangle((x0-L/2, y0-W),L,2*W, linewidth=1.5, ls='--', edgecolor=color, facecolor='none', transform=tr)
         ax.add_patch(rect)
