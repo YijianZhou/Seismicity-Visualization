@@ -65,8 +65,9 @@ sta_data = np.sort(sta_data, order='dist')
 # start plot
 plt.figure(figsize=fig_size)
 ax = plt.gca()
-for i, [_, data, _] in enumerate(sta_data):
+for i, [net_sta, data, _] in enumerate(sta_data):
     plt.plot(time, data, linewidth=line_wid, color=colors[i%10], alpha=alpha)
+    plt.annotate(net_sta, (time[0],data[0]), fontsize=fsize_label, ha='left', va='bottom')
 plt.xlabel('Travel Time (sec)', fontsize=fsize_label)
 plt.ylabel('Epicentral Distance (km)', fontsize=fsize_label)
 plt.title(title, fontsize=fsize_title)
