@@ -32,8 +32,6 @@ samp_rate = 100
 win_len = 60
 win_len_npts = int(win_len * samp_rate)
 time = np.arange(win_len_npts) / samp_rate
-max_dist = 200
-dist_grid = [None, np.arange(0,max_dist+0.1,5)][0]
 chn_idx = 2
 # fig config
 fig_size = (12,14)
@@ -56,7 +54,6 @@ for net_sta, sta_loc in sta_dict.items():
     if len(st)==0: continue
     print('read %s'%st_path)
     dist = calc_dist_km([lat,sta_loc['sta_lat']],[lon,sta_loc['sta_lon']])
-    if dist>max_dist: continue
     sta_data.append((net_sta, st[0].data[0:win_len_npts], dist))
 sta_data = np.array(sta_data, dtype=dtype)
 sta_data = np.sort(sta_data, order='dist')
