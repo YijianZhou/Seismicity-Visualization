@@ -18,6 +18,7 @@ title = 'Phase Picking Comparison'
 xlabels = ['tp_pred - tp_target (sec)', 'ts_pred - ts_target (sec)']
 subplot_rect = {'left':0.08, 'right':0.98, 'bottom':0.08, 'top':0.94, 'wspace':0.05, 'hspace':0.}
 colors = ['tab:blue','tab:orange']
+zorders = np.array([0,1]) + 2
 
 def hist_pick(fpick):
     dt_p, dt_s = [], []
@@ -53,7 +54,7 @@ num_s, num_p = np.zeros([2,len(fpicks),len(bins)-1])
 plt.figure(figsize=fig_size)
 ax = plt.subplot(121)
 for i in range(len(fpicks)):
-    num_p[i],_,_ = plt.hist(dt_p[i], bins, color=colors[i], edgecolor='tab:gray', alpha=alpha, label=names[i])
+    num_p[i],_,_ = plt.hist(dt_p[i], bins, color=colors[i], edgecolor='tab:gray', alpha=alpha, label=names[i], zorder=zorders[i])
 plt.xlabel(xlabels[0], fontsize=fsize_label)
 plt.ylabel('Number', fontsize=fsize_label)
 plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
@@ -65,7 +66,7 @@ plt.annotate('Detection Accuracy:\n  {}\nPicking Precision:\n  {}'.format(det_ac
 ax.legend(fontsize=fsize_label)
 ax = plt.subplot(122, sharey=ax)
 for i in range(len(fpicks)):
-    num_s[i],_,_ = plt.hist(dt_s[i], bins, color=colors[i], edgecolor='tab:gray', alpha=alpha, label=names[i])
+    num_s[i],_,_ = plt.hist(dt_s[i], bins, color=colors[i], edgecolor='tab:gray', alpha=alpha, label=names[i], zorder=zorders[i])
 plt.xlabel(xlabels[1], fontsize=fsize_label)
 plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
 plt.setp(ax.yaxis.get_majorticklabels(), visible=False)
