@@ -12,6 +12,8 @@ from statis_lib import gr_fit, calc_fmd
 fctlg = 'input/catalog_example.csv'
 title = 'Example Magnitude-Time Sequence'
 fout = 'output/example_mag_time.pdf'
+ot_rng = '20210517-20210530'
+ot_rng = [UTCDateTime(time) for time in ot_rng.split('-')]
 lon_rng = [102.2, 102.35]
 lat_rng = [29.125, 29.275]
 dep_rng = [5, 15]
@@ -26,7 +28,7 @@ fsize_title= 18
 
 # read catalog
 events = read_ctlg(fctlg)
-events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng, mag_rng=mag_rng)
+events = slice_ctlg(events, ot_rng=ot_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng, mag_rng=mag_rng)
 mag = np.array(list(events['mag'])) + mag_corr
 ot = [oti.datetime for oti in events['ot']]
 
