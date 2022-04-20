@@ -29,7 +29,7 @@ fig_size = (18, 11)
 fsize_label = 14
 fsize_title = 18
 mag_corr = 0.5
-mark_size = 5.
+marker_size = 5.
 cmap = plt.get_cmap('coolwarm')
 alpha = 0.4
 cbar_frac = 0.03
@@ -40,7 +40,7 @@ line_wid = 1. # fault trace
 # read catalog
 events = read_fctlg_np(fctlg)
 events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
-mag = (np.array(list(events['mag'])) + mag_corr) * mark_size
+mag = (np.array(list(events['mag'])) + mag_corr) * marker_size
 faults = read_fault(ffault, lat_rng, lon_rng)
 
 # calc b map

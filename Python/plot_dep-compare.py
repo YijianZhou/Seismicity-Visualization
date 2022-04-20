@@ -24,7 +24,6 @@ bins = np.arange(0,30.1,3)
 fig_size = (8,6)
 fsize_label = 14
 fsize_title = 18
-mark_size = 10.
 alpha = 0.6
 
 def plot_label(xlabel=None, ylabel=None, title=None):

@@ -25,9 +25,9 @@ fig_size = (8,6)
 fsize_label = 12
 fsize_title = 16
 marker_size = 10.
+marker_non_cum = '^'
+marker_cum = '.'
 alpha = 0.6
-mark_non_cum = '^'
-mark_cum = '.'
 
 def calc_fmd(mag):
     mag = mag[mag!=-np.inf]
@@ -58,8 +58,8 @@ plt.figure(figsize=fig_size)
 p_list = []
 for i in range(len(fctlgs)):
     mag_bin, num, cum_num = calc_fmd(mags[i])
-    p_i = plt.semilogy(mag_bin, num, mark_non_cum, markersize=marker_size, color=colors[i], alpha=alpha)
-    p_i+= plt.semilogy(mag_bin, cum_num, mark_cum, markersize=marker_size, color=colors[i], alpha=alpha)
+    p_i = plt.semilogy(mag_bin, num, marker_non_cum, markersize=marker_size, color=colors[i], alpha=alpha)
+    p_i+= plt.semilogy(mag_bin, cum_num, marker_cum, markersize=marker_size, color=colors[i], alpha=alpha)
     p_list.append(p_i[0])
 plt.legend(p_list, names, fontsize=fsize_label)
 plot_label('Magnitude', 'Number', title)
