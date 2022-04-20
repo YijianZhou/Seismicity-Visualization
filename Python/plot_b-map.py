@@ -4,10 +4,8 @@ import os, sys
 sys.path.append('/home/zhouyj/software/data_prep')
 import matplotlib.pyplot as plt
 import numpy as np
-import multiprocessing as mp
 from obspy import UTCDateTime
 from reader import read_ctlg_np, read_fault, slice_ctlg, slice_ctlg_circle
-from statis_lib import gr_fit
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -46,6 +44,18 @@ mag = (np.array(list(events['mag'])) + mag_corr) * mark_size
 faults = read_fault(ffault, lat_rng, lon_rng)
 
 # calc b map
+def calc_mc_maxc(mag):
+    mag_bin, num, _ = calc_fmd(mag)
+    return mag_bin[np.argmax(num)]
+
+def calc_b(mag, min_num=None):
+    num_events = len(mag)
+    if min_num: 
+        if num_events < min_num: return -1, -1
+    b_val = np.log10(np.exp(1)) / (np.mean(mag) - np.min(mag) + 0.05)
+    b_dev = 2.3 * b_val**2 * (np.var(mag) / num_events)**0.5
+    return round(b_val,2), round(b_dev,2)
+
 def gr_fit(mag, min_num=100):
     if len(mag) < min_num: return np.nan, [np.nan, np.nan], np.nan
     mag = np.array(mag)
