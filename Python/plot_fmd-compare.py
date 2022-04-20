@@ -22,8 +22,8 @@ dep_rng = [0, 20]
 mag_rng = [-1, 8]
 # fig config
 fig_size = (8,6)
-fsize_label = 14
-fsize_title = 18
+fsize_label = 12
+fsize_title = 16
 marker_size = 10.
 alpha = 0.6
 mark_non_cum = '^'
