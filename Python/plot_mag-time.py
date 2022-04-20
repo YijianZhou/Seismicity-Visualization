@@ -1,47 +1,48 @@
-""" plot M-T
+""" plot Magnitue-Time
 """
 import sys
-sys.path.append('/home/zhouyj/software/seis_view')
+sys.path.append('/home/zhouyj/software/data_prep')
 import matplotlib.pyplot as plt
 import numpy as np
 from obspy import UTCDateTime
-from reader import read_ctlg, slice_ctlg
-from statis_lib import gr_fit, calc_fmd
+from reader import read_fctlg_np, slice_ctlg
 
 # i/o paths
-fctlg = 'input/catalog_example.csv'
-title = 'Example Magnitude-Time Sequence'
-fout = 'output/example_mag_time.pdf'
+fctlg = 'input/fctlg_eg.csv'
+title = 'Example Magnitude-Time'
+fout = 'output/eg_mag-time.pdf'
+# slicing criteria
 ot_rng = '20210517-20210530'
 ot_rng = [UTCDateTime(time) for time in ot_rng.split('-')]
 lon_rng = [102.2, 102.35]
 lat_rng = [29.125, 29.275]
 dep_rng = [5, 15]
-mag_rng = [-1, 4.2] # for selection
-mag_corr = 1.
-# fig params
+mag_rng = [-1, 4.2]
+# fig config
 alpha = 0.6
-mark_size = 8
+marker_size = 8
 fig_size = (16*0.8,9*0.8)
 fsize_label = 14
 fsize_title= 18
 
+def plot_label(xlabel=None, ylabel=None, title=None):
+    ax = plt.gca()
+    if xlabel: plt.xlabel(xlabel, fontsize=fsize_label)
+    if ylabel: plt.ylabel(ylabel, fontsize=fsize_label)
+    if title: plt.title(title, fontsize=fsize_title)
+    plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
+    plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
+
 # read catalog
-events = read_ctlg(fctlg)
+events = read_fctlg_np(fctlg)
 events = slice_ctlg(events, ot_rng=ot_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng, mag_rng=mag_rng)
-mag = np.array(list(events['mag'])) + mag_corr
+mag = np.array(list(events['mag']))
 ot = [oti.datetime for oti in events['ot']]
 
-# start plotting
 plt.figure(figsize=fig_size)
 ax=plt.gca()
-plt.scatter(ot, mag, mark_size*np.ones(len(mag)), alpha=alpha)
-# fill edge
-plt.scatter(ot[0:2], np.array(mag_rng)+mag_corr, alpha=0)
-# plot title & label
-plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label, rotation=20)
-plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
-plt.ylabel('Magnitude', fontsize=fsize_label)
-plt.title(title, fontsize=fsize_title)
+plt.scatter(ot, mag, marker_size*np.ones(len(mag)), alpha=alpha)
+plt.scatter(ot[0:2], np.array(mag_rng)+mag_corr, alpha=0) # fill edge
+plot_label(None, 'Magnitude', title)
 plt.tight_layout()
 plt.savefig(fout)

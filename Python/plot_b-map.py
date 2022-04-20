@@ -5,7 +5,7 @@ sys.path.append('/home/zhouyj/software/data_prep')
 import matplotlib.pyplot as plt
 import numpy as np
 from obspy import UTCDateTime
-from reader import read_ctlg_np, read_fault, slice_ctlg, slice_ctlg_circle
+from reader import read_fctlg_np, read_fault, slice_ctlg, slice_ctlg_circle
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -38,7 +38,7 @@ cbar_pad = 0.04
 line_wid = 1. # fault trace
 
 # read catalog
-events = read_ctlg_np(fctlg)
+events = read_fctlg_np(fctlg)
 events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
 mag = (np.array(list(events['mag'])) + mag_corr) * mark_size
 faults = read_fault(ffault, lat_rng, lon_rng)
@@ -91,7 +91,15 @@ mc_mat[cond_b] = np.nan
 a_mat[cond_b] = np.nan
 b_dev_mat[cond_b] = np.nan
 
-def plot_map(d_mat, d_rng, sub_name, hide_y=False):
+def plot_label(xlabel=None, ylabel=None, title=None, yvis=True):
+    ax = plt.gca()
+    if xlabel: plt.xlabel(xlabel, fontsize=fsize_label)
+    if ylabel: plt.ylabel(ylabel, fontsize=fsize_label)
+    if title: plt.title(title, fontsize=fsize_title)
+    plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
+    plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label, visible=yvis)
+
+def plot_map(d_mat, d_rng):
     ax = plt.gca()
     im = plt.imshow(d_mat, cmap=cmap, origin='lower', 
                     vmin=d_rng[0], vmax=d_rng[1],
@@ -102,21 +110,19 @@ def plot_map(d_mat, d_rng, sub_name, hide_y=False):
     for fault in faults:
         plt.plot(fault[:,0], fault[:,1], color='k', linewidth=line_wid)
     plt.scatter(events['lon'], events['lat'], mag, color='gray', edgecolor='none', alpha=alpha, zorder=len(faults)+3)
-    # tune label
-    cbar.ax.set_xlabel(sub_name[4:], fontsize=fsize_label)
     plt.setp(cbar.ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
-    plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
-    plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
-    if hide_y: plt.setp(ax.get_yticklabels(), visible=False)
-    plt.title('%s Map'%sub_name, fontsize=fsize_title)
 
 fig = plt.figure(figsize=fig_size)
 plt.subplot(1,3,1)
-plot_map(b_mat, b_rng, titles[0])
+plot_map(b_mat, b_rng)
+plot_label(title=titles[0])
 plt.annotate('$R_{slice} = %s\degree$\n$N_{min} = %s$'%(slice_rad, min_num), (lon_rng[0],lat_rng[0]), fontsize=fsize_label)
 plt.subplot(1,3,2)
-plot_map(b_dev_mat, [None,None], titles[1], True)
+plot_map(b_dev_mat, [None,None])
+plot_label(title=titles[1], yvis=False)
 plt.subplot(1,3,3)
-plot_map(mc_mat, mc_rng, titles[2], True)
+plot_map(mc_mat, mc_rng)
+plot_label(title=titles[2], yvis=False)
+# save fig
 plt.tight_layout()
 plt.savefig(fout)

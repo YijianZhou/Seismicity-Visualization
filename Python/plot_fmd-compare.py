@@ -4,7 +4,7 @@ import sys
 sys.path.append('/home/zhouyj/software/data_prep')
 import numpy as np
 import matplotlib.pyplot as plt
-from reader import read_ctlg_np, read_fault, slice_ctlg
+from reader import read_fctlg_np, read_fault, slice_ctlg
 from statis_lib import calc_fmd
 import warnings
 warnings.filterwarnings("ignore")
@@ -49,7 +49,7 @@ def plot_label(xlabel=None, ylabel=None, title=None):
 # read catalog
 mags = []
 for fctlg in fctlgs:
-    events = read_ctlg_np(fctlg)
+    events = read_fctlg_np(fctlg)
     events = slice_ctlg(events, mag_rng=mag_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
     mags.append(np.array(list(events['mag'])))
 
