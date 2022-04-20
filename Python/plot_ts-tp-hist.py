@@ -5,13 +5,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # i/o paths
-fpha = 'input/example.pha'
-fout = 'output/example_ts-tp-hist.pdf'
+fpha = 'input/fpha_eg.csv'
+fout = 'output/eg_ts-tp-hist.pdf'
+title = 'Example ts-tp Histogram'
 # fig config
 fig_size = (8,6)
-fsize_label = 14
-fsize_title = 18
+fsize_label = 12
+fsize_title = 16
 bins = np.arange(0,15.1,1.)
+
+def plot_label(xlabel=None, ylabel=None, title=None):
+    ax = plt.gca()
+    if xlabel: plt.xlabel(xlabel, fontsize=fsize_label)
+    if ylabel: plt.ylabel(ylabel, fontsize=fsize_label)
+    if title: plt.title(title, fontsize=fsize_title)
+    plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
+    plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
 
 # read fpha
 ts_tp = []
@@ -26,10 +35,6 @@ for line in lines:
 plt.figure(figsize=fig_size)
 ax = plt.gca()
 plt.hist(ts_tp, bins=bins, edgecolor='tab:gray', alpha=0.8)
-plt.xlabel('ts - tp (sec)', fontsize=fsize_label)
-plt.ylabel('Number of Picks', fontsize=fsize_label)
-plt.title('ts-tp Histogram', fontsize=fsize_title)
-plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
-plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
+plot_label('ts - tp (sec)', 'Number of Picks', title)
 plt.tight_layout()
 plt.savefig(fout)
