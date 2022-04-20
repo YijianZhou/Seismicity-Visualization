@@ -5,7 +5,6 @@ sys.path.append('/home/zhouyj/software/data_prep')
 import numpy as np
 import matplotlib.pyplot as plt
 from reader import read_fctlg_np, read_fault, slice_ctlg
-from statis_lib import calc_fmd
 import warnings
 warnings.filterwarnings("ignore")
 
