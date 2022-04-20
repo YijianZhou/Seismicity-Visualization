@@ -1,32 +1,32 @@
-""" Plot b mapping
+""" Plot b-value mapping
 """
 import os, sys
-sys.path.append('/home/zhouyj/software/seis_view')
+sys.path.append('/home/zhouyj/software/data_prep')
 import matplotlib.pyplot as plt
 import numpy as np
 import multiprocessing as mp
 from obspy import UTCDateTime
-from reader import read_ctlg, read_fault, slice_ctlg, slice_ctlg_circle
+from reader import read_ctlg_np, read_fault, slice_ctlg, slice_ctlg_circle
 from statis_lib import gr_fit
 import warnings
 warnings.filterwarnings("ignore")
 
 # i/o paths
-fctlg = 'input/catalog_example.csv'
-ffault = 'input/faults_example.dat'
-fout = 'output/example_b_map.pdf'
+fctlg = 'input/fctlg_eg.csv'
+ffault = 'input/faults_eg.dat'
+fout = 'output/eg_b-map.pdf'
 titles = ['(a) b-Value', '(b) b-Uncertainty', '(c) Mc']
-# catalog info
+# slicing criteria
 lat_rng = [24.4, 26.8]
 lon_rng = [102.5, 103.9]
 dep_rng = [0, 30]
-# calc params
+# b-value calc params
 xy_grid = 0.1
 slice_rad = 0.2
 min_num = 200
 b_rng = [0.8, 2.4]
 mc_rng = [None, None]
-# fig params
+# fig config
 fig_size = (18, 11)
 fsize_label = 14
 fsize_title = 18
@@ -40,12 +40,20 @@ cbar_pad = 0.04
 line_wid = 1. # fault trace
 
 # read catalog
-events = read_ctlg(fctlg)
+events = read_ctlg_np(fctlg)
 events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
 mag = (np.array(list(events['mag'])) + mag_corr) * mark_size
 faults = read_fault(ffault, lat_rng, lon_rng)
 
 # calc b map
+def gr_fit(mag, min_num=100):
+    if len(mag) < min_num: return np.nan, [np.nan, np.nan], np.nan
+    mag = np.array(mag)
+    mc = calc_mc_maxc(mag) # MAXC method
+    mag = mag[mag>=mc]
+    b_val, b_dev = calc_b(mag)
+    return mc, [b_val, b_dev], np.log10(len(mag))
+
 def slice_calc_mc_b(events, lat_i, lon_j):
     events_i = slice_ctlg_circle(events, lat_i, lon_j, slice_rad)
     if len(events_i)<min_num: return np.nan, np.nan, np.nan, np.nan
@@ -102,4 +110,3 @@ plt.subplot(1,3,3)
 plot_map(mc_mat, mc_rng, titles[2], True)
 plt.tight_layout()
 plt.savefig(fout)
-#plt.show()

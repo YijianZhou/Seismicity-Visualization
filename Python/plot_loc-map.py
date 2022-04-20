@@ -1,4 +1,4 @@
-""" Plot earthquake location in map view
+""" Plot earthquake location distribution in map view
 """
 import sys
 sys.path.append('/home/zhouyj/software/data_prep')
@@ -29,8 +29,8 @@ fsize_label = 12
 fsize_title = 16
 alpha = 0.6
 cmap = plt.get_cmap('hot')
-mark_size = 2.
-line_wid = 1.
+mark_size = 2. # seismic events
+line_wid = 1. # fault trace
 plt_style = ['ggplot',None][1]
 bg_color = 'darkgray'
 grid_color = 'lightgray'
