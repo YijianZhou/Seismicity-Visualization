@@ -1,46 +1,44 @@
-""" Plot waveform aligned by station, sorted by epicentral distance
+""" Plot waveform with x-y as travel time and epicentral distance
 """
 import os, glob, sys
 sys.path.append('/home/zhouyj/software/data_prep')
-sys.path.append('/home/zhouyj/software/PAD')
 from obspy import read, UTCDateTime
 import numpy as np
 import matplotlib.pyplot as plt
-import data_pipeline as dp
 from signal_lib import preprocess, calc_dist_km
-from reader import dtime2str
+from reader import dtime2str, get_data_dict
 import warnings
 warnings.filterwarnings("ignore")
 
 # i/o paths
-fsta = 'input/example.sta'
-data_root = '/data2/Example_data'
-get_data_dict = dp.get_data_dict
+fsta = 'input/station_eg.csv'
+data_root = '/data/Example_data'
+get_data_dict = get_data_dict
 get_sta_dict = dp.get_sta_dict
 sta_dict = get_sta_dict(fsta)
-# get event info
-event_line = '2019-07-07T08:08:48.100000Z,35.855,-117.6692,11.51,1.22'
-codes = event_line.split(',')
-ot = UTCDateTime(codes[0])
+# event info
+ot, lat, lon, dep, mag = '2019-07-07T08:08:48.100000Z', 35.855, -117.6692, 5, 3
+ot = UTCDateTime(ot)
 event_name = dtime2str(ot)
-lat, lon, dep, mag = [float(code) for code in codes[1:5]]
-fout = 'output/eg_waveform-sta-time_%s-M%s.pdf'%(event_name, mag)
 data_dict = get_data_dict(ot, data_root)
-# data process
+fout = 'output/eg_wave-dist_%s.pdf'%event_name
+# data preprocess
 freq_band = [1,40]
 samp_rate = 100
 win_len = 60
 win_len_npts = int(win_len * samp_rate)
 time = np.arange(win_len_npts) / samp_rate
-chn_idx = 2
+max_dist = 200
+chn_idx = 2 # E,N,Z
+amp = 2
 # fig config
 fig_size = (12,14)
 fsize_label = 14
 fsize_title = 18
-title = 'Example Event Waveform: %s M%s'%(event_name, mag)
+title = 'Example Waveform Moveout: %s M%s'%(event_name, mag)
 line_wid = 1
 alpha = 0.8
-colors = ['tab:'+color for color in ['blue','orange','green','red','purple','brown','pink','gray','olive','cyan']] # mpl default color cycle
+colors = ['tab:'+color for color in ['blue','orange','green','red','purple','brown','pink','gray','olive','cyan']]
 
 # read data
 dtype = [('sta','O'),('data','O'),('dist','O')]
@@ -54,21 +52,21 @@ for net_sta, sta_loc in sta_dict.items():
     if len(st)==0: continue
     print('read %s'%st_path)
     dist = calc_dist_km([lat,sta_loc['sta_lat']],[lon,sta_loc['sta_lon']])
-    sta_data.append((net_sta, st[0].data[0:win_len_npts], dist))
+    if dist>max_dist: continue
+    sta_data.append((net_sta, st[0].data[0:win_len_npts]*amp + dist, dist))
 sta_data = np.array(sta_data, dtype=dtype)
 sta_data = np.sort(sta_data, order='dist')
 
 # start plot
 plt.figure(figsize=fig_size)
 ax = plt.gca()
-for i,[sta, data, _] in enumerate(sta_data):
-    plt.plot(time, data+2*i, linewidth=line_wid, color=colors[i%10], alpha=alpha)
-num_sta = len(sta_data)
-plt.yticks(np.arange(num_sta)*2, sta_data['sta'], fontsize=fsize_label)
+for i, [net_sta, data, _] in enumerate(sta_data):
+    plt.plot(time, data, linewidth=line_wid, color=colors[i%10], alpha=alpha)
+    plt.annotate(net_sta, (time[0],data[0]), fontsize=fsize_label, ha='left', va='bottom')
 plt.xlabel('Travel Time (sec)', fontsize=fsize_label)
+plt.ylabel('Epicentral Distance (km)', fontsize=fsize_label)
 plt.title(title, fontsize=fsize_title)
 plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
 plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
-plt.grid()
 plt.tight_layout()
 plt.savefig(fout)
