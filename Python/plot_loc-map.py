@@ -62,7 +62,6 @@ if plt_style: plt.style.use(plt_style)
 fig = plt.figure(figsize=fig_size)
 ax = plt.gca()
 ax.set_facecolor(bg_color)
-tr0 = ax.transData
 # fill up edge
 edgex = [lon_rng[0], lon_rng[0], lon_rng[1], lon_rng[1]]
 edgey = [lat_rng[0], lat_rng[1], lat_rng[0], lat_rng[1]]
