@@ -3,30 +3,31 @@ sys.path.append('/home/zhouyj/software/data_prep')
 from obspy import read, UTCDateTime
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.patches as pat
-import matplotlib.lines as mlines
-from signal_lib import preprocess, calc_dist_km, calc_azm_deg
-from reader import read_fpha, dtime2str, get_yb_data
+from signal_lib import preprocess 
+from reader import read_fpha, dtime2str, get_data_dict
 import warnings
 warnings.filterwarnings("ignore")
 
 # i/o paths
-fpha = 'input/yb_large-all.pha'
-evid, ot = 2, '20210521212125'
-chn_idx, chn = 2, 'Z'
-data_dir = '/data4/YangBi_Fan'
-get_data_dict = get_yb_data
-data_dict = get_data_dict(UTCDateTime(ot), data_dir)
-# sig proc
-win_len = [10,100]
+fpha = 'input/fpha_eg.csv'
+evid = 2 # use event index to select which event to plot
+chn_idx = 2
+data_dir = '/data/Example_data'
+get_data_dict = get_data_dict
+# get event info
+event_loc, pick_dict = read_fpha(fpha)[evid]
+ot = event_loc[0]
+event_name = dtime2str(ot)
+data_dict = get_data_dict(ot, data_dir)
+fout = 'output/eg_wave-tp.pdf'%event_name
+title = 'Waveform Align with P Arrival: %s'%event_name
+# data preprocess
 samp_rate = 100
+win_len = [10,100]
 npts = int(samp_rate * sum(win_len))
 time = -win_len[0] + np.arange(npts) / samp_rate
-freq_band = [[1,20],[0.1,5],[0.5,5]][0]
+freq_band = [1,20]
 num_sta = 20
-fout = 'output/yb_large-waveform_F-%s_%s-%sHz.pdf'%(chn,freq_band[0],freq_band[1])
-#title = '%s Channel Waveform: %s %s-%sHz'%(chn, ot,freq_band[0],freq_band[1])
-title = '(a) Waveform of F1 F2 & F3: %s Channel %s-%sHz'%(chn, freq_band[0],freq_band[1])
 # fig config
 fig_size = (12,9)
 fsize_label = 14
@@ -34,8 +35,7 @@ fsize_title = 18
 line_wid = 1.
 alpha = 0.8
 
-# read fpha
-pick_dict = read_fpha(fpha)[evid][1]
+# sort pick by epicentral distance
 dtype = [('sta','O'),('tp','O')]
 picks = [(sta,tp) for sta, [tp,ts] in pick_dict.items()]
 picks = np.array(picks, dtype=dtype)
@@ -54,10 +54,9 @@ for ii,[sta,tp] in enumerate(picks):
     st = read(data_path)
     st = preprocess(st.slice(tp-win_len[0], tp+win_len[1]), samp_rate, freq_band)
     st_data = st.normalize()[0].data[0:npts] + ii*2
-    color = 'gray' if ii>11 else 'k'
-    plt.plot(time, st_data, color=color, lw=line_wid)
+    plt.plot(time, st_data, lw=line_wid)
 plt.vlines(0, -1, 2*ii+1, 'r', zorder=0)
 plt.yticks(np.arange(len(picks))*2, picks['sta'], fontsize=fsize_label)
-plot_label('Time (s)',None,title)
+plot_label('Time (s)', None, title)
 plt.tight_layout()
 plt.savefig(fout)
