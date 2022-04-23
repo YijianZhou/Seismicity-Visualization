@@ -23,10 +23,11 @@ lat_rng = [35.45, 36.05]
 dep_rng = [0, 15]
 mag_rng = [-1,8]
 mag_corr = 1. # avoid neg
+cos_lat = np.cos(np.mean(lat_rng)*np.pi/180)
 # fig config
-fig_size = (10*0.8, 11*0.8)
-fsize_label = 12
-fsize_title = 16
+fig_size = (10*0.8, 12*0.8)
+fsize_label = 14
+fsize_title = 18
 alpha = 0.6
 cmap = plt.get_cmap('hot')
 mark_size = 2. # seismic events
@@ -34,9 +35,9 @@ line_wid = 1. # fault trace
 plt_style = ['ggplot',None][1]
 bg_color = 'darkgray'
 grid_color = 'lightgray'
-cbar_pos = [0.16,0.1,0.03,0.25]
+cbar_pos = [0.17,0.1,0.03,0.25]
 cbar_ticks = np.arange(0,1.1,0.333)
-cbar_tlabels = ['15','10','5','0']
+cbar_ticklabels = ['15','10','5','0']
 
 def read_catalog(fctlg):
     events = read_fctlg_np(fctlg)
@@ -75,13 +76,15 @@ lat, lon, dep, mag = read_catalog(fctlg)
 color = [cmap(1-(di-dep_rng[0])/(dep_rng[1]-dep_rng[0])) for di in dep]
 plt.scatter(lon, lat, mag, alpha=alpha, color=color, edgecolor='none', zorder=len(faults)+1)
 plt.grid(True, color=grid_color, zorder=1)
+ax.set_aspect(1/cos_lat)
 plot_label(title=title)
 # plot colorbar
 cbar_ax = fig.add_axes(cbar_pos)
 cbar = mpl.colorbar.ColorbarBase(cbar_ax, cmap=cmap)
 cbar.set_label('Depth (km)', rotation=-90, va="bottom", fontsize=fsize_label)
 cbar.set_ticks(cbar_ticks)
-cbar.set_ticklabels(cbar_tlabels)
+cbar.set_ticklabels(cbar_ticklabels)
+plt.setp(cbar.ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
 # save fig
 plt.tight_layout()
 plt.savefig(fout)
