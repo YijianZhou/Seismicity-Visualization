@@ -223,4 +223,3 @@ for i in range(num_prof):
 # save fig
 plt.subplots_adjust(**subplot_rect)
 plt.savefig(fout)
-plt.show()
