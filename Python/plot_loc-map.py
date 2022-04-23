@@ -11,12 +11,12 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # i/o paths
-fctlg = 'input/fctlg_eg.csv'
+fctlg = 'input/fctlg_eg1.csv'
 ffault = 'input/faults_eg.dat'
 title = 'Example Map-view Location Plot'
 fout = 'output/eg_loc-map.pdf'
 # slicing criteria
-ot_rng = '20190704-20190725'
+ot_rng = '20190704-20190710'
 ot_rng = [UTCDateTime(date) for date in ot_rng.split('-')]
 lon_rng =  [-117.85, -117.25]
 lat_rng = [35.45, 36.05]
@@ -66,14 +66,14 @@ ax.set_facecolor(bg_color)
 edgex = [lon_rng[0], lon_rng[0], lon_rng[1], lon_rng[1]]
 edgey = [lat_rng[0], lat_rng[1], lat_rng[0], lat_rng[1]]
 plt.scatter(edgex, edgey, alpha=0)
-# plot seis events
-lat, lon, dep, mag = read_catalog(fctlg)
-color = [cmap(1-(di-dep_rng[0])/(dep_rng[1]-dep_rng[0])) for di in dep]
-plt.scatter(lon, lat, mag, alpha=alpha, color=color, edgecolor='none', zorder=len(faults)+1)
 # plot faults
 faults = read_fault(ffault, lat_rng, lon_rng)
 for fault in faults: 
     plt.plot(fault[:,0], fault[:,1], color='gray', linewidth=line_wid, zorder=2)
+# plot seis events
+lat, lon, dep, mag = read_catalog(fctlg)
+color = [cmap(1-(di-dep_rng[0])/(dep_rng[1]-dep_rng[0])) for di in dep]
+plt.scatter(lon, lat, mag, alpha=alpha, color=color, edgecolor='none', zorder=len(faults)+1)
 plt.grid(True, color=grid_color, zorder=1)
 plot_label(title=title)
 # plot colorbar
