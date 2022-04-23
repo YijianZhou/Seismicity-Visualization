@@ -26,8 +26,8 @@ mag_rng = [-1,8]
 mag_corr = .5 # avoid neg
 cos_lat = np.cos(np.mean(lat_rng)*np.pi/180)
 # fig config
-fig_size = (13*0.8, 14*0.8)
 # subplot arrangement
+fig_size = (13*0.8, 14*0.8)
 num_sub = 6 # number of fault-normal cross-sec
 subplot_grids = [(4,4)]*2 + [(num_sub,4)]*num_sub
 org_grids = [(0,0),(3,0)] + [(i,3) for i in range(num_sub)]
