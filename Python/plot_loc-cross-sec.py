@@ -27,12 +27,22 @@ mag_corr = .5 # avoid neg
 cos_lat = np.cos(np.mean(lat_rng)*np.pi/180)
 # fig config
 fig_size = (13*0.8, 14*0.8)
+# subplot arrangement
 num_sub = 6 # number of fault-normal cross-sec
 subplot_grids = [(4,4)]*2 + [(num_sub,4)]*num_sub
 org_grids = [(0,0),(3,0)] + [(i,3) for i in range(num_sub)]
 col_spans = [3,3] + [1]*num_sub
 row_spans = [3,1] + [1]*num_sub
 subplot_rect = {'left':0.08, 'right':0.96, 'bottom':0.03, 'top':0.96, 'wspace':0., 'hspace':0.}
+# cross-sec config
+main_pnt = np.array([[-117.75,35.94],[-117.34,35.54]])
+main_wid = 8/111 # degree
+main_names = ["O","O'"]
+main_color = 'tab:blue'
+sub_len = 14/111 # degree
+sub_names = ["A","A'","B","B'","C","C'","D","D'","E","E'","F","F'"]
+sub_color = 'tab:green'
+# in each subplot
 alpha = 0.6
 cmap = plt.get_cmap('hot')
 plt_style = ['ggplot',None][1]
@@ -51,30 +61,21 @@ fsize_title = 18
 def polar2xy(prof_polar):
     prof_xy = []
     for [lon0, lat0, theta] in prof_polar:
-        lon1 = lon0 - np.cos(theta*np.pi/180) * prof_len/2
-        lon2 = lon0 + np.cos(theta*np.pi/180) * prof_len/2
-        lat1 = lat0 - np.sin(theta*np.pi/180) * prof_len/2
-        lat2 = lat0 + np.sin(theta*np.pi/180) * prof_len/2
+        lon1 = lon0 - np.cos(theta*np.pi/180) * sub_len/2
+        lon2 = lon0 + np.cos(theta*np.pi/180) * sub_len/2
+        lat1 = lat0 - np.sin(theta*np.pi/180) * sub_len/2
+        lat2 = lat0 + np.sin(theta*np.pi/180) * sub_len/2
         prof_xy += [[lon1,lat1],[lon2,lat2]]
     return np.array(prof_xy)
 
-# main prof
-main_pnt = np.array([[-117.75,35.94],[-117.34,35.54]])
-main_wid = 8/111 # degree
-main_names = ["O","O'"]
-rect_main_color = 'tab:blue'
-# sub prof
 sub_theta = abs(np.arctan((main_pnt[0,0]-main_pnt[1,0])/(main_pnt[0,1]-main_pnt[1,1]))) * 180/np.pi
 lon_step = (main_pnt[1][0] - main_pnt[0][0])/num_sub
 lat_step = (main_pnt[1][1] - main_pnt[0][1])/num_sub
-prof_pnts_polar = np.array([\
+sub_pnts_polar = np.array([\
     [main_pnt[0][0]+(i+0.5)*lon_step,
      main_pnt[0][1]+(i+0.5)*lat_step, sub_theta] for i in range(num_sub)])
-prof_len = 14/111 # degree
-prof_wid = ((lon_step*cos_lat)**2 + lat_step**2)**0.5 /2 # degree
-pnt_names = ["A","A'","B","B'","C","C'","D","D'","E","E'","F","F'"]
-prof_pnts = polar2xy(prof_pnts_polar)
-rect_sub_color = 'tab:green'
+sub_wid = ((lon_step*cos_lat)**2 + lat_step**2)**0.5 /2 # degree
+sub_pnts = polar2xy(sub_pnts_polar)
 
 # read catalog
 events = read_fctlg_np(fctlg)
@@ -163,21 +164,21 @@ plt.grid(True, color=grid_color)
 ax.set_aspect(1/cos_lat)
 plot_label(title=title)
 # plot reference rectangles of cross-section
-num = len(prof_pnts)
-for j in range(num):
-    name = pnt_names[j]
-    x, y = prof_pnts[j]
-    va = 'top' if j%2==0 else 'bottom'
-    plt.annotate(name, (x,y), fontsize=fsize_label, va=va, ha='center')
-    plt.scatter([x],[y],[10], 'k')
-plot_rect(prof_pnts, prof_wid, rect_sub_color)
 for j in range(2):
     name = main_names[j]
     x, y = main_pnt[j]
     ha = 'right' if j%2==0 else 'left'
     plt.annotate(name, (x,y), fontsize=fsize_label, va='center', ha=ha)
     plt.scatter([x],[y],[ref_pnt_size], 'k')
-plot_rect(main_pnt, main_wid, rect_main_color)
+plot_rect(main_pnt, main_wid, main_color)
+num = len(sub_pnts)
+for j in range(num):
+    name = sub_names[j]
+    x, y = sub_pnts[j]
+    va = 'top' if j%2==0 else 'bottom'
+    plt.annotate(name, (x,y), fontsize=fsize_label, va=va, ha='center')
+    plt.scatter([x],[y],[10], 'k')
+plot_rect(sub_pnts, sub_wid, sub_color)
 # plot colorbar
 cbar_ax = fig.add_axes(cbar_pos)
 cbar = mpl.colorbar.ColorbarBase(cbar_ax, cmap=cmap)
@@ -192,20 +193,20 @@ ax = plt.subplot2grid(subplot_grids[1], org_grids[1], colspan=col_spans[1], rows
 prof_dist, prof_dep, prof_mag, abs_ab = calc_prof(main_pnt, main_wid)
 prof_name = main_names
 ax.invert_yaxis()
-plot_prof(rect_main_color)
+plot_prof(main_color)
 plot_label('Along Profile Distance (km)', 'Depth (km)')
 ax.set_aspect(1)
 # sub (fault-normal) profiles
-num_prof = int(len(prof_pnts)/2)
+num_prof = int(len(sub_pnts)/2)
 for i in range(num_prof-1,-1,-1):
     ax = plt.subplot2grid(subplot_grids[2+i], org_grids[2+i], colspan=col_spans[2+i], rowspan=row_spans[2+i])
-    prof_pnt = prof_pnts[i*2:i*2+2]
-    prof_name = pnt_names[i*2:i*2+2]
-    prof_dist, prof_dep, prof_mag, abs_ab = calc_prof(prof_pnt, prof_wid)
+    prof_pnt = sub_pnts[i*2:i*2+2]
+    prof_name = sub_names[i*2:i*2+2]
+    prof_dist, prof_dep, prof_mag, abs_ab = calc_prof(prof_pnt, sub_wid)
     ax.invert_yaxis()
     ax.yaxis.tick_right()
     ax.yaxis.set_label_position("right")
-    plot_prof(rect_sub_color)
+    plot_prof(sub_color)
     ax.set_aspect(1)
     xvis = False if i<num_prof-1 else True
     plot_label(None, 'Depth (km)', xvis=xvis)
