@@ -12,7 +12,8 @@ title = 'Example ts-tp Histogram'
 fig_size = (8,6)
 fsize_label = 12
 fsize_title = 16
-bins = np.arange(0,15.1,1.)
+max_dt = 15
+bins = np.arange(0,max_dt+.1,1.)
 
 def plot_label(xlabel=None, ylabel=None, title=None):
     ax = plt.gca()
@@ -30,7 +31,7 @@ for line in lines:
     if len(codes[0])>10: continue
     tp, ts = [UTCDateTime(code) for code in codes[1:3]]
     ti = ts - tp
-    if 0<ti<15: ts_tp.append(ti)
+    if 0<ti<max_dt: ts_tp.append(ti)
 
 plt.figure(figsize=fig_size)
 ax = plt.gca()
