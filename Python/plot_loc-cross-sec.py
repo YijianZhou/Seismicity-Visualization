@@ -1,7 +1,7 @@
 """ Plot earthquake location map & cross-sections
 """
 import sys
-sys.path.append('/home/zhouyj/software/seis_view')
+sys.path.append('/home/zhouyj/software/data_prep')
 import numpy as np
 from obspy import UTCDateTime
 import matplotlib as mpl
