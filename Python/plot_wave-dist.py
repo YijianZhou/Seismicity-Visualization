@@ -17,7 +17,7 @@ get_data_dict = get_data_dict
 get_sta_dict = dp.get_sta_dict
 sta_dict = get_sta_dict(fsta)
 # event info
-ot, lat, lon, dep, mag = '2019-07-07T08:08:48.100000Z', 35.855, -117.6692, 5, 3
+ot, lat, lon = '2019-07-07T08:08:48.100000Z', 35.855, -117.6692
 ot = UTCDateTime(ot)
 event_name = dtime2str(ot)
 data_dict = get_data_dict(ot, data_root)
@@ -35,10 +35,9 @@ amp = 2
 fig_size = (12,14)
 fsize_label = 14
 fsize_title = 18
-title = 'Example Waveform Moveout: %s M%s'%(event_name, mag)
+title = 'Example Waveform Moveout: %s'%event_name
 line_wid = 1
 alpha = 0.8
-colors = ['tab:'+color for color in ['blue','orange','green','red','purple','brown','pink','gray','olive','cyan']]
 
 # read data
 dtype = [('sta','O'),('data','O'),('dist','O')]
@@ -57,16 +56,19 @@ for net_sta, sta_loc in sta_dict.items():
 sta_data = np.array(sta_data, dtype=dtype)
 sta_data = np.sort(sta_data, order='dist')
 
-# start plot
+def plot_label(xlabel=None, ylabel=None, title=None):
+    ax = plt.gca()
+    if xlabel: plt.xlabel(xlabel, fontsize=fsize_label)
+    if ylabel: plt.ylabel(ylabel, fontsize=fsize_label)
+    if title: plt.title(title, fontsize=fsize_title)
+    plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
+    plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
+
 plt.figure(figsize=fig_size)
 ax = plt.gca()
 for i, [net_sta, data, _] in enumerate(sta_data):
-    plt.plot(time, data, linewidth=line_wid, color=colors[i%10], alpha=alpha)
+    plt.plot(time, data, linewidth=line_wid, alpha=alpha)
     plt.annotate(net_sta, (time[0],data[0]), fontsize=fsize_label, ha='left', va='bottom')
-plt.xlabel('Travel Time (sec)', fontsize=fsize_label)
-plt.ylabel('Epicentral Distance (km)', fontsize=fsize_label)
-plt.title(title, fontsize=fsize_title)
-plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
-plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
+plot_label('Travel Time (sec)', 'Epicentral Distance (km)', title)
 plt.tight_layout()
 plt.savefig(fout)
