@@ -207,7 +207,7 @@ for i in range(num_prof-1,-1,-1):
     ax.yaxis.set_label_position("right")
     plot_prof(rect_sub_color)
     ax.set_aspect(1)
-    xvis = False if i<num_prof else True
+    xvis = False if i<num_prof-1 else True
     plot_label(None, 'Depth (km)', xvis=xvis)
     plt.ylabel('Depth (km)', rotation=-90, va='bottom', fontsize=fsize_label)
 # save fig
