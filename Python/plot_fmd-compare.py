@@ -3,6 +3,7 @@
 import sys
 sys.path.append('/home/zhouyj/software/data_prep')
 import numpy as np
+from obspy import UTCDateTime
 import matplotlib.pyplot as plt
 from reader import read_fctlg_np, read_fault, slice_ctlg
 import warnings
@@ -12,9 +13,12 @@ warnings.filterwarnings("ignore")
 fctlgs = ['input/fctlg_eg1.csv','input/fctlg_eg2.csv']
 names = ['Catalog 1','Catalog 2']
 colors = ['tab:blue', 'tab:orange']
+zorders = [1,2]
 title = 'Example FMD Comparison'
 fout = 'output/eg_fmd-compare.pdf'
 # slicing criteria
+ot_rng = '20190704-20190710'
+ot_rng = [UTCDateTime(date) for date in ot_rng.split('-')]
 lon_rng =  [-117.9, -117.2]
 lat_rng = [35.4, 36.1]
 dep_rng = [0, 20]
@@ -57,8 +61,8 @@ plt.figure(figsize=fig_size)
 p_list = []
 for i in range(len(fctlgs)):
     mag_bin, num, cum_num = calc_fmd(mags[i])
-    p_i = plt.semilogy(mag_bin, num, marker_non_cum, markersize=marker_size, color=colors[i], alpha=alpha)
-    p_i+= plt.semilogy(mag_bin, cum_num, marker_cum, markersize=marker_size, color=colors[i], alpha=alpha)
+    p_i = plt.semilogy(mag_bin, num, marker_non_cum, markersize=marker_size, color=colors[i], markeredgecolor='gray', zorder=zorders[i], alpha=alpha)
+    p_i+= plt.semilogy(mag_bin, cum_num, marker_cum, markersize=marker_size, color=colors[i], markeredgecolor='gray', zorder=zorders[i], alpha=alpha)
     p_list.append(p_i[0])
 plt.legend(p_list, names, fontsize=fsize_label)
 plot_label('Magnitude', 'Number', title)
