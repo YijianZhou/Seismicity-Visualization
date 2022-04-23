@@ -44,8 +44,8 @@ sub_names = ["A","A'","B","B'","C","C'","D","D'","E","E'","F","F'"]
 sub_color = 'tab:green'
 # in each subplot
 alpha = 0.6
-cmap = plt.get_cmap('hot')
-plt_style = ['ggplot',None][1]
+cmap = plt.get_cmap('hot') # code dep
+plt_style = ['ggplot',None][1] # map-view
 mark_size = 2. # seis events
 line_wid = 1. # fault trace
 bg_color = 'darkgray'
@@ -57,7 +57,7 @@ ref_pnt_size = 10
 fsize_label = 14
 fsize_title = 18
 
-# get ref points of fault-normal cross-sections
+# get ref points of sub (fault-normal) cross-sections
 def polar2xy(prof_polar):
     prof_xy = []
     for [lon0, lat0, theta] in prof_polar:
@@ -132,8 +132,6 @@ def plot_prof(color):
     plt.scatter(edgex, edgey, alpha=0)
     plt.annotate(prof_name[0], (0, 0), fontsize=fsize_label, ha='center', va='top')
     plt.annotate(prof_name[1], (abs_ab, 0), fontsize=fsize_label, ha='center', va='top')
-    plt.setp(ax.xaxis.get_majorticklabels(), fontsize=fsize_label)
-    plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
 
 def plot_label(xlabel=None, ylabel=None, title=None, xvis=True, yvis=True):
     ax = plt.gca()
