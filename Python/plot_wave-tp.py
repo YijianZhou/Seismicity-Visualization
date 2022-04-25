@@ -10,20 +10,20 @@ warnings.filterwarnings("ignore")
 
 # i/o paths
 fpha = 'input/fpha_eg.csv'
-evid = 2 # use event index to select which event to plot
+evid = 1 # use event index to select which event to plot
 chn_idx = 2
-data_dir = '/data/Example_data'
+data_dir = 'input/Example_data'
 get_data_dict = get_data_dict
 # get event info
 event_loc, pick_dict = read_fpha(fpha)[evid]
 ot = event_loc[0]
 event_name = dtime2str(ot)
 data_dict = get_data_dict(ot, data_dir)
-fout = 'output/eg_wave-tp.pdf'%event_name
-title = 'Waveform Align with P Arrival: %s'%event_name
+fout = 'output/eg_wave-tp_%s.pdf'%event_name
+title = 'Waveform Alignment with P Arrival: %s'%event_name
 # data preprocess
 samp_rate = 100
-win_len = [10,100]
+win_len = [10,30]
 npts = int(samp_rate * sum(win_len))
 time = -win_len[0] + np.arange(npts) / samp_rate
 freq_band = [1,20]
@@ -39,6 +39,7 @@ alpha = 0.8
 dtype = [('sta','O'),('tp','O')]
 picks = [(sta,tp) for sta, [tp,ts] in pick_dict.items()]
 picks = np.array(picks, dtype=dtype)
+picks = [pick for pick in picks if pick['sta'] in data_dict]
 picks = np.sort(picks, order='tp')[0:num_sta]
 
 def plot_label(xlabel=None, ylabel=None, title=None):
