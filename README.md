@@ -3,10 +3,10 @@ Scripts for seismicity statistics and visualization. One script for one figure, 
 
 **1. Python** <br>
 ***1.1 Location distribution*** <br>
-    *plot_loc-map.py*: map view of location distribution <br>
-    *plot_loc-cross-sec.py*: plot map view + cross-sections <br>
-    *plot_loc-compare.py*: plot comparison of map + cross-section location <br>
-    *plot_dep-compare.py*: plot comparison of depth distribution <br>
+>*plot_loc-map.py*: map view of location distribution <br>
+>*plot_loc-cross-sec.py*: plot map view + cross-sections <br>
+>*plot_loc-compare.py*: plot comparison of map + cross-section location <br>
+>*plot_dep-compare.py*: plot comparison of depth distribution <br>
 ***1.2 Magnitude distribution*** <br>
     *plot_mag-time.py*: magnitude-time sequence & seismic rate <br>
     *plot_fmd-compare.py*: plot comparison of FMD <br>
