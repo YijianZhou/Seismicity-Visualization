@@ -162,7 +162,7 @@ for fault in faults:
     plt.plot(fault[:,0], fault[:,1], color='gray', linewidth=line_wid, zorder=2)
 # plot seis events
 color = [cmap(1-(di-dep_rng[0])/(dep_rng[1]-dep_rng[0])) for di in dep]
-plt.scatter(lon, lat, mag, alpha=alpha, color=color, edgecolor='none', zorder=2)
+plt.scatter(lon, lat, mag, alpha=alpha, color=color, edgecolor='none', zorder=2+len(faults))
 plt.grid(True, color=grid_color)
 ax.set_aspect(1/cos_lat)
 plot_label(title=title)
