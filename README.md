@@ -1,7 +1,7 @@
 # Seismicity-Visualization
 Scripts for seismicity statistics and visualization. One script for one figure, with example outputs <br>
 
-1. Python <br>
+**1. Python** <br>
   1.1 Location distribution <br>
   *plot_loc-map.py*: map view of location distribution <br>
   *plot_loc-cross-sec.py*: plot map view + cross-sections <br>
@@ -17,8 +17,8 @@ Scripts for seismicity statistics and visualization. One script for one figure, 
   *plot_wave-dist.py*: plot waveform moveout, x-y for travel time and epicentral distance <br>
   *plot_wave-tp.py*: waveform alignment by P arrival <br>
 
-2. MATLAB <br>
+**2. MATLAB** <br>
   *plot_seis3d.m*: 3D seismic events distribution <br>
 
-3. GMT <br>
+**3. GMT** <br>
   *plot_sta.sh*: plot station distribution <br>
