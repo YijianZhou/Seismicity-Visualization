@@ -26,8 +26,8 @@ mag_rng = [-1,8]
 mag_corr = .5 # avoid neg
 cos_lat = np.cos(np.mean(lat_rng)*np.pi/180)
 # fig config
-# subplot arrangement
 fig_size = (13*0.8, 14*0.8)
+# subplot arrangement
 num_sub = 6 # number of fault-normal cross-sec
 subplot_grids = [(4,4)]*2 + [(num_sub,4)]*num_sub
 org_grids = [(0,0),(3,0)] + [(i,3) for i in range(num_sub)]
@@ -37,27 +37,27 @@ subplot_rect = {'left':0.08, 'right':0.96, 'bottom':0.03, 'top':0.96, 'wspace':0
 # cross-sec config
 main_pnt = np.array([[-117.75,35.94],[-117.34,35.54]])
 main_wid = 8/111 # degree
-main_names = ["O","O'"]
+main_name = ["O","O'"]
 main_color = 'tab:blue'
 sub_len = 14/111 # degree
 sub_names = ["A","A'","B","B'","C","C'","D","D'","E","E'","F","F'"]
 sub_color = 'tab:green'
-# in each subplot
+# markers in each subplots
 alpha = 0.6
-cmap = plt.get_cmap('hot') # code dep
-plt_style = ['ggplot',None][1] # map-view
+cmap = plt.get_cmap('hot')
+plt_style = ['ggplot',None][1]
 mark_size = 2. # seis events
 line_wid = 1. # fault trace
 bg_color = 'darkgray'
 grid_color = 'lightgray'
-cbar_pos = [0.16,0.3,0.02,0.18] # pos in ax
+cbar_pos = [0.16,0.3,0.02,0.18] # pos in ax: left
 cbar_ticks = np.arange(0,1.,0.333)
 cbar_tlabels = ['15','10','5','0']
 ref_pnt_size = 10
 fsize_label = 14
 fsize_title = 18
 
-# get ref points of sub (fault-normal) cross-sections
+# get ref points of fault-normal cross-sections
 def polar2xy(prof_polar):
     prof_xy = []
     for [lon0, lat0, theta] in prof_polar:
@@ -92,15 +92,15 @@ def calc_dist(a, b):
     dy = a[1]-b[1]
     return (dx**2 + dy**2)**0.5
 
-def calc_prof(ref_pnt, prof_wid):
+def calc_prof(prof_pnt, prof_wid):
     prof_dist, prof_dep, prof_mag = [], [], []
-    cos_lat = np.cos(ref_pnt[0][1]*np.pi/180)
-    vec_ab = ref_pnt[1] - ref_pnt[0]
+    cos_lat = np.cos(prof_pnt[0][1]*np.pi/180)
+    vec_ab = prof_pnt[1] - prof_pnt[0]
     vec_ab[0] *= cos_lat
     abs_ab = np.linalg.norm(vec_ab)
     for i in range(num_events):
         loc_c = np.array([lon[i], lat[i]])
-        vec_ac = loc_c - ref_pnt[0]
+        vec_ac = loc_c - prof_pnt[0]
         vec_ac[0] *= cos_lat
         abs_ac = np.linalg.norm(vec_ac)
         cos = vec_ac.dot(vec_ab) / abs_ab / abs_ac
@@ -111,24 +111,30 @@ def calc_prof(ref_pnt, prof_wid):
         prof_mag.append(mag[i])
     return prof_dist, prof_dep, prof_mag, abs_ab*111
 
-def plot_rect(prof_pnts, prof_wid, color):
-    num_profs = int(len(prof_pnts)/2)
-    for j in range(num_profs):
-        refs = prof_pnts[j*2:j*2+2]
-        theta = np.arctan((refs[1][1]-refs[0][1]) / (refs[1][0]-refs[0][0]))
-        W = prof_wid * ((cos_lat*np.sin(theta))**2 + np.cos(theta)**2)**-0.5
-        L = calc_dist(refs[0], refs[1])
-        x0, y0 = np.mean(refs[:,0]), np.mean(refs[:,1])
-        theta = np.rad2deg(theta)
+def plot_rect(prof_pnts, prof_names, prof_wid, color):
+    num_prof = int(len(prof_pnts)/2)
+    for ii in range(num_prof):
+        # ref rect
+        prof_pnt = prof_pnts[ii*2:ii*2+2]
+        W = prof_wid
+        L = calc_dist(prof_pnt[0], prof_pnt[1])
+        theta = np.rad2deg(np.arctan((prof_pnt[1][1]-prof_pnt[0][1]) / (prof_pnt[1][0]-prof_pnt[0][0])))
+        x0, y0 = np.mean(prof_pnt[:,0]), np.mean(prof_pnt[:,1])
         tr = mpl.transforms.Affine2D().rotate_deg_around(x0, y0, theta) + tr0
         rect = pat.Rectangle((x0-L/2, y0-W),L,2*W, linewidth=1.5, ls='--', edgecolor=color, facecolor='none', transform=tr)
         ax.add_patch(rect)
-    return 
+        # ref point name
+        for jj in range(2):
+            name = prof_names[ii*2+jj]
+            x, y = prof_pnt[jj]
+            ha = 'right' if jj%2==0 else 'left'
+            plt.annotate(name, (x,y), fontsize=fsize_label, va='center', ha=ha)
+            plt.scatter([x],[y],[ref_pnt_size], 'k')
 
-def plot_prof(color):
+def plot_prof(prof_name, prof_color):
     edgex = [0,0,abs_ab,abs_ab]
     edgey = [dep_rng[0],dep_rng[1],dep_rng[0],dep_rng[1]]
-    plt.scatter(prof_dist, prof_dep, prof_mag, color=color, edgecolor='none', alpha=alpha)
+    plt.scatter(prof_dist, prof_dep, prof_mag, color=prof_color, edgecolor='none', alpha=alpha)
     plt.scatter(edgex, edgey, alpha=0)
     plt.annotate(prof_name[0], (0, 0), fontsize=fsize_label, ha='center', va='top')
     plt.annotate(prof_name[1], (abs_ab, 0), fontsize=fsize_label, ha='center', va='top')
@@ -160,23 +166,9 @@ color = [cmap(1-(di-dep_rng[0])/(dep_rng[1]-dep_rng[0])) for di in dep]
 plt.scatter(lon, lat, mag, alpha=alpha, color=color, edgecolor='none', zorder=2)
 plt.grid(True, color=grid_color)
 ax.set_aspect(1/cos_lat)
+plot_rect(main_pnt, main_name, main_wid, main_color)
+plot_rect(sub_pnts, sub_names, sub_wid, sub_color)
 plot_label(title=title)
-# plot reference rectangles of cross-section
-for j in range(2):
-    name = main_names[j]
-    x, y = main_pnt[j]
-    ha = 'right' if j%2==0 else 'left'
-    plt.annotate(name, (x,y), fontsize=fsize_label, va='center', ha=ha)
-    plt.scatter([x],[y],[ref_pnt_size], 'k')
-plot_rect(main_pnt, main_wid, main_color)
-num = len(sub_pnts)
-for j in range(num):
-    name = sub_names[j]
-    x, y = sub_pnts[j]
-    va = 'top' if j%2==0 else 'bottom'
-    plt.annotate(name, (x,y), fontsize=fsize_label, va=va, ha='center')
-    plt.scatter([x],[y],[10], 'k')
-plot_rect(sub_pnts, sub_wid, sub_color)
 # plot colorbar
 cbar_ax = fig.add_axes(cbar_pos)
 cbar = mpl.colorbar.ColorbarBase(cbar_ax, cmap=cmap)
@@ -189,9 +181,8 @@ plt.setp(cbar.ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
 # main (along-fault) profile
 ax = plt.subplot2grid(subplot_grids[1], org_grids[1], colspan=col_spans[1], rowspan=row_spans[1])
 prof_dist, prof_dep, prof_mag, abs_ab = calc_prof(main_pnt, main_wid)
-prof_name = main_names
 ax.invert_yaxis()
-plot_prof(main_color)
+plot_prof(main_name, main_color)
 plot_label('Along Profile Distance (km)', 'Depth (km)')
 ax.set_aspect(1)
 # sub (fault-normal) profiles
@@ -199,15 +190,14 @@ num_prof = int(len(sub_pnts)/2)
 for i in range(num_prof-1,-1,-1):
     ax = plt.subplot2grid(subplot_grids[2+i], org_grids[2+i], colspan=col_spans[2+i], rowspan=row_spans[2+i])
     prof_pnt = sub_pnts[i*2:i*2+2]
-    prof_name = sub_names[i*2:i*2+2]
     prof_dist, prof_dep, prof_mag, abs_ab = calc_prof(prof_pnt, sub_wid)
     ax.invert_yaxis()
     ax.yaxis.tick_right()
     ax.yaxis.set_label_position("right")
-    plot_prof(sub_color)
+    plot_prof(sub_names[i*2:i*2+2], sub_color)
     ax.set_aspect(1)
     xvis = False if i<num_prof-1 else True
-    plot_label(None, 'Depth (km)', xvis=xvis)
+    plot_label(xvis=xvis)
     plt.ylabel('Depth (km)', rotation=-90, va='bottom', fontsize=fsize_label)
 # save fig
 plt.subplots_adjust(**subplot_rect)

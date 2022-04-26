@@ -91,14 +91,14 @@ def plot_rect(prof_pnts, prof_names, prof_wid, color):
             plt.annotate(name, (x,y), fontsize=fsize_label, va='center', ha=ha)
             plt.scatter([x],[y],[ref_pnt_size], 'k')
 
-def calc_prof(ref_pnt, prof_wid):
+def calc_prof(prof_pnt, prof_wid):
     prof_dist, prof_dep, prof_mag = [], [], []
-    vec_ab = ref_pnt[1] - ref_pnt[0]
+    vec_ab = prof_pnt[1] - prof_pnt[0]
     vec_ab[0] *= cos_lat
     abs_ab = np.linalg.norm(vec_ab)
     for i in range(num_events):
         loc_c = np.array([lon[i], lat[i]])
-        vec_ac = loc_c - ref_pnt[0]
+        vec_ac = loc_c - prof_pnt[0]
         vec_ac[0] *= cos_lat
         abs_ac = np.linalg.norm(vec_ac)
         cos = vec_ac.dot(vec_ab) / abs_ab / abs_ac
