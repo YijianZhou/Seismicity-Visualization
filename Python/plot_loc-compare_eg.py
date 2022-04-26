@@ -35,7 +35,9 @@ col_spans = [4]*2*num_ctlg
 row_spans = [4]*num_ctlg + [1]*num_ctlg
 # cross-sec config
 main_pnt = np.array([[-117.75,35.94],[-117.34,35.54]])
-main_wid = 8/111 # degree
+main_W = 8/111 # degree
+theta = abs(np.arctan((main_pnt[0,0]-main_pnt[1,0])/(main_pnt[0,1]-main_pnt[1,1]))) # rad
+main_wid = ((main_W*np.cos(theta)*cos_lat)**2 + (main_W*np.sin(theta))**2)**0.5 # real len
 main_name = ["O","O'"]
 main_color = 'tab:blue'
 ref_pnt_size = 10
@@ -71,34 +73,32 @@ def calc_dist(a, b):
     dy = a[1]-b[1]
     return (dx**2 + dy**2)**0.5
 
-def plot_rect(prof_pnts, prof_names, prof_wid, color):
+def plot_rect(prof_pnts, prof_names, prof_W, color, ax):
+    tr0 = ax.transData
     num_prof = int(len(prof_pnts)/2)
     for ii in range(num_prof):
         # ref rect
-        prof_pnt = prof_pnts[ii*2:ii*2+2]
-        W = prof_wid
-        L = calc_dist(prof_pnt[0], prof_pnt[1])
-        theta = np.rad2deg(np.arctan((prof_pnt[1][1]-prof_pnt[0][1]) / (prof_pnt[1][0]-prof_pnt[0][0])))
-        x0, y0 = np.mean(prof_pnt[:,0]), np.mean(prof_pnt[:,1])
+        [[x1,y1],[x2,y2]] = prof_pnts[ii*2:ii*2+2]
+        prof_L = calc_dist([x1,y1],[x2,y2])
+        theta = np.rad2deg(np.arctan((y2-y1)/(x2-x1)))
+        x0, y0 =(x1+x2)/2, (y1+y2)/2
         tr = mpl.transforms.Affine2D().rotate_deg_around(x0, y0, theta) + tr0
-        rect = pat.Rectangle((x0-L/2, y0-W),L,2*W, linewidth=1.5, ls='--', edgecolor=color, facecolor='none', transform=tr)
+        rect = pat.Rectangle((x0-prof_L/2, y0-prof_W),prof_L,2*prof_W, linewidth=1.5, ls='--', edgecolor=color, facecolor='none', transform=tr)
         ax.add_patch(rect)
         # ref point name
-        for jj in range(2):
-            name = prof_names[ii*2+jj]
-            x, y = prof_pnt[jj]
-            ha = 'right' if jj%2==0 else 'left'
-            plt.annotate(name, (x,y), fontsize=fsize_label, va='center', ha=ha)
-            plt.scatter([x],[y],[ref_pnt_size], 'k')
+        name1, name2 = prof_names[ii*2:ii*2+2]
+        plt.scatter([x1,x2],[y1,y2],2*[ref_pnt_size], 'k')
+        plt.annotate(name1,(x1,y1), fontsize=fsize_label, va='center', ha='left')
+        plt.annotate(name2,(x2,y2), fontsize=fsize_label, va='center', ha='right')
 
-def calc_prof(prof_pnt, prof_wid):
+def calc_prof(ref_pnt, prof_wid):
     prof_dist, prof_dep, prof_mag = [], [], []
-    vec_ab = prof_pnt[1] - prof_pnt[0]
+    vec_ab = ref_pnt[1] - ref_pnt[0]
     vec_ab[0] *= cos_lat
     abs_ab = np.linalg.norm(vec_ab)
     for i in range(num_events):
         loc_c = np.array([lon[i], lat[i]])
-        vec_ac = loc_c - prof_pnt[0]
+        vec_ac = loc_c - ref_pnt[0]
         vec_ac[0] *= cos_lat
         abs_ac = np.linalg.norm(vec_ac)
         cos = vec_ac.dot(vec_ab) / abs_ab / abs_ac
@@ -133,7 +133,6 @@ for i in range(num_ctlg):
   # 1. plot loc map
   ax = plt.subplot2grid(subplot_grid, org_grids[i], colspan=col_spans[i], rowspan=row_spans[i])
   ax.set_facecolor(bg_color)
-  tr0 = ax.transData
   edgex = [lon_rng[0], lon_rng[0], lon_rng[1], lon_rng[1]] # fill up edge
   edgey = [lat_rng[0], lat_rng[1], lat_rng[0], lat_rng[1]]
   plt.scatter(edgex, edgey, alpha=0)
@@ -146,7 +145,7 @@ for i in range(num_ctlg):
   color = [cmap(1-(di-dep_rng[0])/(dep_rng[1]-dep_rng[0])) for di in dep]
   plt.scatter(lon, lat, mag, alpha=alpha, color=color, edgecolor='none', zorder=len(faults)+1)
   plt.grid(True, color=grid_color, zorder=1)
-  plot_rect(main_pnt, main_name, main_wid, main_color)
+  plot_rect(main_pnt, main_name, main_W, main_color, ax)
   ax.set_aspect(1/cos_lat)
   yvis = True if i==0 else False
   plot_label(title=titles[i], yvis=yvis)
