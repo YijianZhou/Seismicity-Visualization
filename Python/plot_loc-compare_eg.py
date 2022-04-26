@@ -167,6 +167,5 @@ for i in range(num_ctlg):
   ylabel = 'Depth (km)' if i==0 else None
   plot_label('Along Profile Distance (km)',ylabel,yvis=yvis)
 # save fig
-#plt.subplots_adjust(**subplot_rect)
 plt.tight_layout()
 plt.savefig(fout)
