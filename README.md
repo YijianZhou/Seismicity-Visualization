@@ -19,9 +19,11 @@ Scripts for seismicity statistics and visualization. One script for one figure, 
 ***1.4 Waveform plots*** <br>
 >*plot_wave-dist.py*  plot waveform moveout, x-y for travel time and epicentral distance <br>
 >*plot_wave-tp.py*  waveform alignment by P arrival <br>
+<br>
 
 **2. MATLAB** <br>
 >*plot_seis3d.m*  3D seismic events distribution <br>
+<br>
 
 **3. GMT** <br>
 >*plot_sta.sh*  plot station distribution <br>
