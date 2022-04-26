@@ -88,8 +88,8 @@ def plot_rect(prof_pnts, prof_names, prof_W, color, ax):
         # ref point name
         name1, name2 = prof_names[ii*2:ii*2+2]
         plt.scatter([x1,x2],[y1,y2],2*[ref_pnt_size], 'k')
-        plt.annotate(name1,(x1,y1), fontsize=fsize_label, va='center', ha='left')
-        plt.annotate(name2,(x2,y2), fontsize=fsize_label, va='center', ha='right')
+        plt.annotate(name1,(x1,y1), fontsize=fsize_label, va='center', ha='right')
+        plt.annotate(name2,(x2,y2), fontsize=fsize_label, va='center', ha='left')
 
 def calc_prof(ref_pnt, prof_wid):
     prof_dist, prof_dep, prof_mag = [], [], []
