@@ -1,12 +1,10 @@
 """ plot Magnitue-Time sequence & seismic rate
 """
-import sys
-sys.path.append('/home/zhouyj/software/data_prep')
 import matplotlib.pyplot as plt
 import numpy as np
 import multiprocessing as mp
 from obspy import UTCDateTime
-from reader import read_fctlg_np, slice_ctlg
+from reader import read_fctlg, slice_ctlg
 
 # i/o paths
 fctlg = 'input/fctlg_eg1.csv'
@@ -41,7 +39,7 @@ def plot_label(xlabel=None, ylabel=None, title=None, xrot=0):
     plt.setp(ax.yaxis.get_majorticklabels(), fontsize=fsize_label)
 
 # read catalog
-events = read_fctlg_np(fctlg)
+events = read_fctlg(fctlg)
 events = slice_ctlg(events, ot_rng=ot_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng, mag_rng=mag_rng)
 mag = list(events['mag'])
 ot = events['ot']

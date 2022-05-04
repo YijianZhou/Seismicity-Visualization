@@ -1,13 +1,11 @@
 """ Plot earthquake location map & cross-sections
 """
-import sys
-sys.path.append('/home/zhouyj/software/data_prep')
 import numpy as np
 from obspy import UTCDateTime
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patches as pat
-from reader import read_fctlg_np, slice_ctlg, read_fault
+from reader import read_fctlg, slice_ctlg, read_fault
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -80,7 +78,7 @@ sub_pnts = polar2xy(sub_pnts_polar)
 main_wid = ((main_W*np.cos(theta)*cos_lat)**2 + (main_W*np.sin(theta))**2)**0.5 # real len
 
 # read catalog
-events = read_fctlg_np(fctlg)
+events = read_fctlg(fctlg)
 events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
 num_events = len(events)
 lat = np.array(list(events['lat']))

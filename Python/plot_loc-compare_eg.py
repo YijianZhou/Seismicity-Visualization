@@ -1,13 +1,11 @@
 """ Plot location comparison in map view & cross-section
 """
-import sys
-sys.path.append('/home/zhouyj/software/data_prep')
 import numpy as np
 from obspy import UTCDateTime
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patches as pat
-from reader import read_fctlg_np, slice_ctlg, read_fault
+from reader import read_fctlg, slice_ctlg, read_fault
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -56,7 +54,7 @@ fsize_label = 14
 fsize_title = 18
 
 def read_catalog(fctlg):
-    events = read_fctlg_np(fctlg)
+    events = read_fctlg(fctlg)
     events['mag'] += mag_corr
     events = slice_ctlg(events, ot_rng=ot_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
     print('%s | %s events'%(fctlg, len(events)))

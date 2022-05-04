@@ -1,7 +1,5 @@
 """ Histogram of ts-tp, ttp & tts
 """
-import sys
-sys.path.append('/home/zhouyj/software/data_prep')
 from obspy import UTCDateTime
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm

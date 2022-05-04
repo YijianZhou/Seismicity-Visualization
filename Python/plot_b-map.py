@@ -1,11 +1,9 @@
 """ Plot b-value mapping
 """
-import os, sys
-sys.path.append('/home/zhouyj/software/data_prep')
 import matplotlib.pyplot as plt
 import numpy as np
 from obspy import UTCDateTime
-from reader import read_fctlg_np, read_fault, slice_ctlg, slice_ctlg_circle
+from reader import read_fctlg, read_fault, slice_ctlg, slice_ctlg_circle
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -40,7 +38,7 @@ cbar_pad = 0.06 # loc
 line_wid = 1. # fault trace
 
 # read catalog
-events = read_fctlg_np(fctlg)
+events = read_fctlg(fctlg)
 events = slice_ctlg(events, ot_rng=ot_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng, mag_rng=mag_rng)
 faults = read_fault(ffault, lat_rng, lon_rng)
 

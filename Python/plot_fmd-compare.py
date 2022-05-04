@@ -1,11 +1,9 @@
 """ Plot comparison of FMD between catalogs
 """
-import sys
-sys.path.append('/home/zhouyj/software/data_prep')
 import numpy as np
 from obspy import UTCDateTime
 import matplotlib.pyplot as plt
-from reader import read_fctlg_np, read_fault, slice_ctlg
+from reader import read_fctlg, read_fault, slice_ctlg
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -52,7 +50,7 @@ def plot_label(xlabel=None, ylabel=None, title=None):
 # read catalog
 mags = []
 for fctlg in fctlgs:
-    events = read_fctlg_np(fctlg)
+    events = read_fctlg(fctlg)
     events = slice_ctlg(events, mag_rng=mag_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
     mags.append(np.array(list(events['mag'])))
 

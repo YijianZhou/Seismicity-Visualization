@@ -1,7 +1,6 @@
 """ Plot waveform with x-y as travel time and epicentral distance
 """
-import os, glob, sys
-sys.path.append('/home/zhouyj/software/data_prep')
+import os, glob
 from obspy import read, UTCDateTime
 import numpy as np
 import matplotlib.pyplot as plt

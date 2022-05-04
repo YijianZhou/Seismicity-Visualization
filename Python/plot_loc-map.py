@@ -1,12 +1,10 @@
 """ Plot earthquake location distribution in map view
 """
-import sys
-sys.path.append('/home/zhouyj/software/data_prep')
 from obspy import UTCDateTime
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from reader import read_fctlg_np, slice_ctlg, read_fault
+from reader import read_fctlg, slice_ctlg, read_fault
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -40,7 +38,7 @@ cbar_ticks = np.arange(0,1.1,0.333)
 cbar_ticklabels = ['15','10','5','0']
 
 def read_catalog(fctlg):
-    events = read_fctlg_np(fctlg)
+    events = read_fctlg(fctlg)
     events['mag'] += mag_corr
     events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng, mag_rng=mag_rng, ot_rng=ot_rng)
     events = np.sort(events, order='ot')
