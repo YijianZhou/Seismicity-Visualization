@@ -3,7 +3,7 @@
 import numpy as np
 from obspy import UTCDateTime
 import matplotlib.pyplot as plt
-from reader import read_fctlg, read_fault, slice_ctlg
+from reader import read_fctlg, slice_ctlg
 import warnings
 warnings.filterwarnings("ignore")
 
