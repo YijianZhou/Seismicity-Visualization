@@ -51,7 +51,7 @@ def plot_label(xlabel=None, ylabel=None, title=None):
 mags = []
 for fctlg in fctlgs:
     events = read_fctlg(fctlg)
-    events = slice_ctlg(events, mag_rng=mag_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
+    events = slice_ctlg(events, ot_rng=ot_rng, mag_rng=mag_rng, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
     mags.append(np.array(list(events['mag'])))
 
 # start plot
