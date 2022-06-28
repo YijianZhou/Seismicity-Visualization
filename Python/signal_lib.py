@@ -8,7 +8,7 @@ def preprocess(stream, samp_rate, freq_band):
     # time alignment
     start_time = max([trace.stats.starttime for trace in stream])
     end_time = min([trace.stats.endtime for trace in stream])
-    if start_time>end_time: print('bad data!'); return []
+    if start_time>=end_time: print('bad data!'); return []
     st = stream.slice(start_time, end_time)
     # resample data
     org_rate = st[0].stats.sampling_rate
