@@ -13,9 +13,9 @@ def preprocess(stream, samp_rate, freq_band):
     # resample data
     org_rate = st[0].stats.sampling_rate
     if org_rate!=samp_rate: st = st.interpolate(samp_rate)
-    for ii in range(3):
-        st[ii].data[np.isnan(st[ii].data)] = 0
-        st[ii].data[np.isinf(st[ii].data)] = 0
+    for tr in st:
+        tr.data[np.isnan(tr.data)] = 0
+        tr.data[np.isinf(tr.data)] = 0
     # filter
     st = st.detrend('demean').detrend('linear').taper(max_percentage=0.05, max_length=10.)
     freq_min, freq_max = freq_band
