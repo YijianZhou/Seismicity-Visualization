@@ -11,13 +11,13 @@ def preprocess(stream, samp_rate, freq_band):
     if start_time>=end_time: print('bad data!'); return []
     st = stream.slice(start_time, end_time)
     # resample data
+    st = st.detrend('demean').detrend('linear').taper(max_percentage=0.05, max_length=10.)
     org_rate = st[0].stats.sampling_rate
     if org_rate!=samp_rate: st = st.interpolate(samp_rate)
     for tr in st:
         tr.data[np.isnan(tr.data)] = 0
         tr.data[np.isinf(tr.data)] = 0
     # filter
-    st = st.detrend('demean').detrend('linear').taper(max_percentage=0.05, max_length=10.)
     freq_min, freq_max = freq_band
     if freq_min and freq_max:
         return st.filter('bandpass', freqmin=freq_min, freqmax=freq_max)
