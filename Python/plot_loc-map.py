@@ -39,14 +39,13 @@ cbar_ticklabels = ['15','10','5','0']
 
 def read_catalog(fctlg):
     events = read_fctlg(fctlg)
-    events['mag'] += mag_corr
     events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng, mag_rng=mag_rng, ot_rng=ot_rng)
     events = np.sort(events, order='ot')
     print('%s %s events'%(fctlg,len(events)))
     lat = np.array(list(events['lat']))
     lon = np.array(list(events['lon']))
     dep = np.array(list(events['dep']))
-    mag = np.array(list(events['mag'])) * mark_size
+    mag = np.array(list(events['mag']+mag_corr)) * mark_size
     return lat, lon, dep, mag
 
 def plot_label(xlabel=None, ylabel=None, title=None):
