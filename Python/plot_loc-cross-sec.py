@@ -79,7 +79,7 @@ main_wid = ((main_W*np.cos(theta)*cos_lat)**2 + (main_W*np.sin(theta))**2)**0.5 
 
 # read catalog
 events = read_fctlg(fctlg)
-events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng)
+events = slice_ctlg(events, lat_rng=lat_rng, lon_rng=lon_rng, dep_rng=dep_rng, ot_rng=ot_rng)
 num_events = len(events)
 lat = np.array(list(events['lat']))
 lon = np.array(list(events['lon']))
