@@ -50,7 +50,7 @@ def calc_fmd(mag):
     mag_bin = np.around(np.arange(mag_min-0.1, mag_max+0.2, 0.1),1)
     num = np.histogram(mag, mag_bin)[0]
     cum_num = np.cumsum(num[::-1])[::-1]
-    return mag_bin[1:], num, cum_num
+    return mag_bin[:-1], num, cum_num
 
 def calc_mc_maxc(mag):
     mag_bin, num, _ = calc_fmd(mag)
